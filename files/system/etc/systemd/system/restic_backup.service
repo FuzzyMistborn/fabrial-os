@@ -1,0 +1,16 @@
+[Unit]
+Description=Run Restic Backup
+Wants=restic_backup.timer
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root
+ExecStartPre=/bin/sleep 20
+# HC_BACKUP_UUID and autorestic are installed post-boot; this unit will
+# fail gracefully until autorestic is set up.
+ExecStart=/usr/local/bin/runitor -uuid ${HC_BACKUP_UUID} -- /usr/local/bin/autorestic backup -a
+EnvironmentFile=-/etc/environment
+EnvironmentFile=-/etc/restic.env
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+# Sudoers drop-in: allow main user passwordless systemctl and grub-reboot
+# Replace YOUR_USERNAME with your actual username, or manage this post-install.
+# On uBlue/Aurora, the username isn't known at image-build time.
+# This file is intentionally generic — the post-install script writes the real one.
+#
+# To apply manually after first boot:
+#   echo "$USER ALL= NOPASSWD: /bin/systemctl,/usr/sbin/grub-reboot" | \
+#     sudo tee /etc/sudoers.d/$USER
