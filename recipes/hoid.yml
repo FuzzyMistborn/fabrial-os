@@ -147,13 +147,15 @@ modules:
   - type: script
     snippets:
       - |
-        for id in \
+        flatpak uninstall -y --noninteractive \
           org.kde.kcalc \
           org.kde.Haruna \
           org.kde.kontact \
-          org.deskflow.deskflow; do
-          find /usr/share/ublue-os/flatpaks/ -type f -exec sed -i "/${id}/d" {} + 2>/dev/null || true
-        done
+          org.deskflow.deskflow || true
+  - type: script
+    snippets:
+      - |
+        flatpak uninstall -y --unused --noninteractive || true
 
   # ── 7. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing
