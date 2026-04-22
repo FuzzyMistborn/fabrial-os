@@ -140,13 +140,20 @@ modules:
           - org.chromium.Chromium
           - org.kde.kid3
           - com.valvesoftware.Steam
-        remove:
-          - org.kde.kcalc
-          - org.kde.Haruna
-          - org.kde.kontact
-          - org.deskflow.deskflow
       - scope: user
         install: []
 
-  # ── 6. SIGNING ─────────────────────────────────────────────────────────────
+  # ── 6. REMOVE UNWANTED FLATPAKS ────────────────────────────────────────────
+  - type: script
+    snippets:
+      - |
+        for id in \
+          org.kde.kcalc \
+          org.kde.Haruna \
+          org.kde.kontact \
+          org.deskflow.deskflow; do
+          find /usr/share/ublue-os/flatpaks/ -type f -exec sed -i "/${id}/d" {} + 2>/dev/null || true
+        done
+
+  # ── 7. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing
