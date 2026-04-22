@@ -90,6 +90,7 @@ modules:
         - sshd.service
         - restic_backup.timer
         - restic_prune.timer
+        - remove-unwanted-flatpaks.service
 
   # ── 4. JUSTFILES ───────────────────────────────────────────────────────────
   - type: justfiles
@@ -143,19 +144,5 @@ modules:
       - scope: user
         install: []
 
-  # ── 6. REMOVE UNWANTED FLATPAKS ────────────────────────────────────────────
-  - type: script
-    snippets:
-      - |
-        flatpak uninstall -y --noninteractive \
-          org.kde.kcalc \
-          org.kde.Haruna \
-          org.kde.kontact \
-          org.deskflow.deskflow || true
-  - type: script
-    snippets:
-      - |
-        flatpak uninstall -y --unused --noninteractive || true
-
-  # ── 7. SIGNING ─────────────────────────────────────────────────────────────
+  # ── 6. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing
