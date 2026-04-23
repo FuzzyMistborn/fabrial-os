@@ -7,8 +7,9 @@ on:
   push:
     paths-ignore: # don't rebuild if only documentation has changed
       - "**.md"
-
-  pull_request:
+      - ".github/workflows/*"
+    branches:
+      - main
   workflow_dispatch: # allow manually triggering builds
 concurrency:
   # only run one build at a time
