@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: fabrial-os
+name: fabrial-os-hoid
 description: Personal Aurora (KDE) desktop image for Hoid
 
 base-image: ghcr.io/ublue-os/aurora
@@ -56,30 +56,7 @@ modules:
 
     remove:
       packages:
-        # KDE PIM / groupware bloat — Aurora already removed most of these,
-        # skip-unavailable handles any that are already gone.
-        - akregator
-        - akonadi-import-wizard
-        - dragon
-        - elisa-player
-        - grantlee-editor
-        - kamoso
-        - kaddressbook
-        - khelpcenter
-        - kmahjongg
-        - kmail
-        - kmail-account-wizard
-        - kmines
-        - kmouth
-        - haruna
-        - kontact
-        - kontactinterface
-        - korganizer
-        - kpat
-        - pim-data-exporter
-        - pim-sieve-editor
         - plasma-welcome
-        - neochat
 
   # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
   - type: systemd

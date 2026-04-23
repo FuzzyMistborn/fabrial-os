@@ -1,0 +1,53 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: fabrial-os-kelsier
+description: Personal Bazzite desktop image for Kelsier
+
+base-image: ghcr.io/ublue-os/bazzite
+image-version: stable
+
+modules:
+
+  # ── 1. SYSTEM FILES ────────────────────────────────────────────────────────
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
+  - type: dnf
+    install:
+      # skip-unavailable prevents hard failures for packages already in Aurora's
+      # base image or unavailable on this Fedora version.
+      skip-unavailable: true
+      packages:
+        - nextcloud-client
+        - https://github.com/joshuar/go-hass-agent/releases/download/v14.10.5/go-hass-agent-14.10.5-1.x86_64.rpm
+
+  # ── 3. JUSTFILES ───────────────────────────────────────────────────────────
+  - type: justfiles
+    include:
+      - 60-kelsier.just
+
+  # ── 4. FLATPAKS ────────────────────────────────────────────────────────────
+  - type: default-flatpaks
+    configurations:
+      - notify: true
+        scope: system
+        install:
+          - com.discordapp.Discord
+          - org.audacityteam.Audacity
+          - org.flameshot.Flameshot
+          - org.videolan.VLC
+          - io.github.dweymouth.supersonic
+          - com.github.wwmm.easyeffects
+          - io.github.lullabyX.sone
+          - org.localsend.localsend_app
+          - com.obsproject.Studio
+          - org.chromium.Chromium
+ 
+      - scope: user
+        install: []
+
+  # ── 5. SIGNING ─────────────────────────────────────────────────────────────
+  - type: signing
