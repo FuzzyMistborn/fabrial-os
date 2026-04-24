@@ -2,7 +2,9 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 
 type: default-flatpaks
-system:
+configurations:
+  - notify: false
+    scope: system
     install:
       - org.videolan.VLC
       - org.localsend.localsend_app

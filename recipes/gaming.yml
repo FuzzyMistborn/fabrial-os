@@ -43,13 +43,10 @@ modules:
 
   - type: default-flatpaks
     configurations:
-      - notify: true
+      - notify: false
         scope: system
         install:
           - com.discordapp.Discord
- 
-      - scope: user
-        install: []
 
   # ── 5. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing

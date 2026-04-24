@@ -49,6 +49,7 @@ modules:
         # ── System utilities ──
         - ncdu
         - screen
+        - zoxide
         - hddtemp
         - ulauncher
         - https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.24/veracrypt-1.26.24-Fedora-40-x86_64.rpm
@@ -91,7 +92,7 @@ modules:
 
   - type: default-flatpaks
     configurations:
-      - notify: true
+      - notify: false
         scope: system
         install:
           - org.libreoffice.LibreOffice
@@ -121,8 +122,6 @@ modules:
           - com.moonlight_stream.Moonlight
           - com.valvesoftware.Steam
           - com.vysp3r.ProtonPlus
-      - scope: user
-        install: []
 
   # ── 6. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing
