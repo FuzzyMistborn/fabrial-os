@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: fabrial-os-hoid
-description: Personal Aurora (KDE) desktop image for Hoid
+name: fabrial-os
+description: Personal Aurora (KDE) desktop image (primarily for Hoid laptop)
 
 base-image: ghcr.io/ublue-os/aurora
 image-version: stable
@@ -12,6 +12,8 @@ modules:
   - type: files
     files:
       - source: system
+        destination: /
+      - source: hoid
         destination: /
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
@@ -72,6 +74,7 @@ modules:
   # ── 4. JUSTFILES ───────────────────────────────────────────────────────────
   - type: justfiles
     include:
+      - 50-common.just
       - 60-hoid.just
 
   # ── 5. FLATPAKS ────────────────────────────────────────────────────────────

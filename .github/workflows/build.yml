@@ -28,8 +28,9 @@ jobs:
       matrix:
         recipe:
           # !! Add your recipes here
-          - hoid.yml
-          - kelsier.yml
+          - main.yml
+          - gaming.yml
+          - htpc.yml
     steps:
       # the build is fully handled by the reusable github action
       - name: Build Custom Image

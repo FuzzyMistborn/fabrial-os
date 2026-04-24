@@ -1,9 +1,9 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: fabrial-os-kelsier
-description: Personal Bazzite desktop image for Kelsier
+name: fabrial-os-htpc
+description: Personal Bazzite HTPC image 
 
-base-image: ghcr.io/ublue-os/bazzite
+base-image: ghcr.io/ublue-os/bazzite-deck
 image-version: stable
 
 modules:
@@ -21,13 +21,13 @@ modules:
       # base image or unavailable on this Fedora version.
       skip-unavailable: true
       packages:
-        - nextcloud-client
         - https://github.com/joshuar/go-hass-agent/releases/download/v14.10.5/go-hass-agent-14.10.5-1.x86_64.rpm
 
   # ── 3. JUSTFILES ───────────────────────────────────────────────────────────
   - type: justfiles
     include:
-      - 60-kelsier.just
+      - 50-common.just
+      - 60-vin.just
 
   # ── 4. FLATPAKS ────────────────────────────────────────────────────────────
   - type: default-flatpaks
@@ -35,15 +35,8 @@ modules:
       - notify: true
         scope: system
         install:
-          - com.discordapp.Discord
-          - org.audacityteam.Audacity
-          - org.flameshot.Flameshot
           - org.videolan.VLC
-          - io.github.dweymouth.supersonic
-          - com.github.wwmm.easyeffects
-          - io.github.lullabyX.sone
           - org.localsend.localsend_app
-          - com.obsproject.Studio
           - org.chromium.Chromium
  
       - scope: user
