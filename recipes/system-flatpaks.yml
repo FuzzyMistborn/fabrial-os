@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+
+type: default-flatpaks
+system:
+    install:
+      - org.videolan.VLC
+      - org.localsend.localsend_app
+      - org.chromium.Chromium
+      - org.mozilla.firefox
+      - org.kde.okular
+      - com.github.tchx84.Flatseal
+      - org.fedoraproject.MediaWriter
+      - org.kde.gwenview
+      - io.github.DenysMb.Kontainer
+      - io.github.flattool.Warehouse
+      - org.localsend.localsend_app

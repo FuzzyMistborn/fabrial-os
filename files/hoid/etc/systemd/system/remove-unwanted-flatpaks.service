@@ -6,7 +6,7 @@ ConditionPathExists=!/var/lib/remove-unwanted-flatpaks.stamp
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/sh -c 'flatpak remove --system --noninteractive org.kde.kcalc org.kde.Haruna org.kde.kontact org.deskflow.deskflow 2>/dev/null; true'
+ExecStart=/bin/sh -c 'flatpak remove --system --noninteractive org.kde.kcalc org.kde.Haruna org.kde.kontact org.mozilla.Thunderbird org.deskflow.deskflow 2>/dev/null; true'
 ExecStartPost=/bin/touch /var/lib/remove-unwanted-flatpaks.stamp
 
 [Install]

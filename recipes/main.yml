@@ -51,6 +51,7 @@ modules:
         - screen
         - hddtemp
         - ulauncher
+        - https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.24/veracrypt-1.26.24-Fedora-40-x86_64.rpm
 
         # ── Hardware / Input ──
         - logiops
@@ -77,7 +78,17 @@ modules:
       - 50-common.just
       - 60-hoid.just
 
-  # ── 5. FLATPAKS ────────────────────────────────────────────────────────────
+  # ── 5. CHEZMOI ─────────────────────────────────────────────────────────────
+  - type: chezmoi
+    repository: "git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
+    disable-init: true
+    all-users: false
+    run-every: '12h'
+
+  # ── 6. FLATPAKS ────────────────────────────────────────────────────────────
+  - from-file: system-flatpaks.yml
+  - from-file: media-flatpaks.yml
+
   - type: default-flatpaks
     configurations:
       - notify: true
@@ -86,41 +97,30 @@ modules:
           - org.libreoffice.LibreOffice
           - org.gimp.GIMP
           - com.github.PintaProject.Pinta
-          - org.audacityteam.Audacity
-          - org.bunkus.mkvtoolnix-gui
-          - com.github.jeromerobert.pdfarranger
-          - org.flameshot.Flameshot
-          - org.kde.krename
-          - org.kde.skanlite
-          - org.kde.skanpage
-          - org.videolan.VLC
-          - org.remmina.Remmina
+          - io.gitlab.adhami3310.Converter
           - us.zoom.Zoom
           - org.signal.Signal
           - org.ferdium.Ferdium
           - md.obsidian.Obsidian
           - com.jgraph.drawio.desktop
-          - io.github.dweymouth.supersonic
-          - org.bunkus.mkvtoolnix-gui
-          - com.github.wwmm.easyeffects
-          - io.github.lullabyX.sone
-          - com.mojang.Minecraft
+          - org.remmina.Remmina
+          - org.openscad.OpenSCAD
           - com.bambulab.BambuStudio
-          - com.moonlight_stream.Moonlight
-          - com.system76.Popsicle
-          - org.raspberrypi.rpi-imager
-          - org.localsend.localsend_app
-          - io.gitlab.adhami3310.Converter
+          - org.bunkus.mkvtoolnix-gui
+          - com.github.jeromerobert.pdfarranger
+          - org.kde.krename
+          - org.kde.skanlite
+          - org.kde.skanpage
+          - org.filezillaproject.Filezilla
           - io.github.Omniaevo.mqtt5-explorer
           - com.bitwarden.desktop
-          - com.obsproject.Studio
-          - com.vysp3r.ProtonPlus
+          - com.system76.Popsicle
+          - org.raspberrypi.rpi-imager
           - org.gnome.Calculator
-          - org.openscad.OpenSCAD
-          - org.filezillaproject.Filezilla
-          - org.chromium.Chromium
-          - org.kde.kid3
+          - com.mojang.Minecraft
+          - com.moonlight_stream.Moonlight
           - com.valvesoftware.Steam
+          - com.vysp3r.ProtonPlus
       - scope: user
         install: []
 

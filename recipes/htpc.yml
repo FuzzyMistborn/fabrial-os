@@ -23,24 +23,9 @@ modules:
       packages:
         - https://github.com/joshuar/go-hass-agent/releases/download/v14.10.5/go-hass-agent-14.10.5-1.x86_64.rpm
 
-  # ── 3. JUSTFILES ───────────────────────────────────────────────────────────
-  - type: justfiles
-    include:
-      - 50-common.just
-      - 60-vin.just
 
-  # ── 4. FLATPAKS ────────────────────────────────────────────────────────────
-  - type: default-flatpaks
-    configurations:
-      - notify: true
-        scope: system
-        install:
-          - org.videolan.VLC
-          - org.localsend.localsend_app
-          - org.chromium.Chromium
- 
-      - scope: user
-        install: []
+  # ── 3. FLATPAKS ────────────────────────────────────────────────────────────
+  - from-file: common-flatpaks.yml
 
-  # ── 5. SIGNING ─────────────────────────────────────────────────────────────
+  # ── 4. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing

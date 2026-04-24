@@ -17,6 +17,7 @@ setup-sudoers:
 # Expected vault items:
 #   SSH Key type items (private key from sshKey field):
 #     "SSH: github"            → ~/.ssh/github
+#     "SSH: gitea"            → ~/.ssh/gitea
 #     "SSH: desktop_lxcs"      → ~/.ssh/desktop_lxcs
 #     "SSH: desktop_ambition"  → ~/.ssh/desktop_ambition
 #
@@ -101,6 +102,7 @@ install-ssh-keys:
 
     echo "-- Installing SSH keys from Bitwarden --"
     _bw_ssh_key "SSH: github"            "${HOME}/.ssh/github"
+    _bw_ssh_key "SSH: gitea"            "${HOME}/.ssh/gitea"
     _bw_ssh_key "SSH: desktop_lxcs"      "${HOME}/.ssh/desktop_lxcs"
     _bw_ssh_key "SSH: desktop_ambition"  "${HOME}/.ssh/desktop_ambition"
     echo "Done: SSH keys installed."
@@ -146,66 +148,21 @@ setup-mounts:
     sudo systemctl daemon-reload
     echo "Done: mounts configured."
 
-# ── Zsh / Oh My Zsh ──────────────────────────────────────────────────────────
+# ── Chezmoi ──────────────────────────────────────────────────────────────────
+# Requires: ujust install-ssh-keys to have run first (uses ~/.ssh/gitea)
 
 [group('common')]
-install-zsh:
+install-chezmoi:
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ -d "${HOME}/.oh-my-zsh" ]; then
-        echo "oh-my-zsh already installed -- skipping."
-    else
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-            "" --unattended
-    fi
+    CHEZMOI_REPO="git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
 
-    ZSH_CUSTOM="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh-custom}"
-
-    if [ -d "${ZSH_CUSTOM}/themes/powerlevel10k" ]; then
-        git -C "${ZSH_CUSTOM}/themes/powerlevel10k" pull --ff-only
-    else
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-            "${ZSH_CUSTOM}/themes/powerlevel10k"
-    fi
-
-    if [ -d "${ZSH_CUSTOM}/plugins/zsh-autosuggestions" ]; then
-        git -C "${ZSH_CUSTOM}/plugins/zsh-autosuggestions" pull --ff-only
-    else
-        git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions \
-            "${ZSH_CUSTOM}/plugins/zsh-autosuggestions"
-    fi
-
-    if [ -d "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" ]; then
-        git -C "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting" pull --ff-only
-    else
-        git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git \
-            "${ZSH_CUSTOM}/plugins/zsh-syntax-highlighting"
-    fi
-
-    # oh-my-zsh --unattended creates a default .zshrc, so always overwrite with
-    # our skel versions to ensure the correct config and p10k theme are applied.
-    for f in .zshrc .p10k.zsh; do
-        if [ -f "/etc/skel/${f}" ]; then
-            cp "/etc/skel/${f}" "${HOME}/${f}"
-            echo "Copied /etc/skel/${f} to ${HOME}/${f}"
-        else
-            echo "WARNING: /etc/skel/${f} not found — skipping"
-        fi
-    done
-
-    # Set up .ssh dir and copy config from skel if not already present
-    mkdir -p "${HOME}/.ssh"
-    chmod u=rwx,g=,o= "${HOME}/.ssh"
-    if [ ! -f "${HOME}/.ssh/config" ] && [ -f "/etc/skel/.ssh/config" ]; then
-        cp "/etc/skel/.ssh/config" "${HOME}/.ssh/config"
-        echo "Copied ssh config from skel"
-    fi
-    if [ -f "${HOME}/.ssh/config" ]; then
-        chmod u=rw,g=,o= "${HOME}/.ssh/config"
-    fi
+    echo "-- Initializing chezmoi from ${CHEZMOI_REPO} --"
+    GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/gitea -o IdentitiesOnly=yes" \
+        chezmoi init --apply "${CHEZMOI_REPO}"
 
     sudo usermod -s /usr/bin/zsh "$(whoami)"
-    echo "Done: zsh set as default shell. Log out and back in to activate."
+    echo "Done: chezmoi applied, zsh set as default shell. Log out and back in to activate."
 
 # ── Wallpaper ────────────────────────────────────────────────────────────────
 

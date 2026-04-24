@@ -1,6 +1,6 @@
 # Hoid-specific just recipes
 # Run with: ujust <recipe-name>
-# Shared recipes (bw-unlock, install-zsh, setup-mounts, etc.) live in 50-common.just
+# Shared recipes (bw-unlock, install-chezmoi, setup-mounts, etc.) live in 50-common.just
 
 # ── Full first-boot setup ─────────────────────────────────────────────────────
 
@@ -20,8 +20,7 @@ setup-hoid:
     ujust install-backup-tools
     ujust setup-restic-env
     ujust setup-autorestic
-    ujust install-veracrypt
-    ujust install-zsh
+    ujust install-chezmoi
     ujust install-vscode-extensions
     ujust setup-printer
     ujust install-konsave
@@ -31,6 +30,7 @@ setup-hoid:
     ujust install-mqtt-explorer
     ujust setup-wallpaper
     ujust setup-avatar
+    ujust setup-nextcloud
     ujust setup-autostart
     ujust toggle-user-motd
     ujust bw-lock
@@ -263,6 +263,20 @@ firefox-profile-import:
     echo "Downloading Firefox profile from: ${FIREFOX_URL}"
 
     PROFILE_DIR="${HOME}/.var/app/org.mozilla.firefox/config/mozilla/firefox"
+    if ! find "${PROFILE_DIR}" -maxdepth 1 -type d -name "*.default-release" 2>/dev/null | grep -q .; then
+        echo "Profile directory not found — launching Firefox to initialize it..."
+        flatpak run org.mozilla.firefox --headless &>/dev/null &
+        FIREFOX_PID=$!
+        for i in $(seq 1 60); do
+            if find "${PROFILE_DIR}" -maxdepth 1 -type d -name "*.default-release" 2>/dev/null | grep -q .; then
+                break
+            fi
+            sleep 1
+        done
+        kill "${FIREFOX_PID}" 2>/dev/null || true
+        wait "${FIREFOX_PID}" 2>/dev/null || true
+        sleep 1
+    fi
     TARGET=$(find "${PROFILE_DIR}" -maxdepth 1 -type d -name "*.default-release" | head -1)
     if [[ -z "${TARGET}" ]]; then
         echo "ERROR: no *.default-release folder found in ${PROFILE_DIR}"
@@ -316,6 +330,27 @@ thunderbird-profile-import:
     rm -f /tmp/thunderbird-profile.tar.gz
     echo "Done: Thunderbird profile imported."
 
+# ── Nextcloud ────────────────────────────────────────────────────────────────
+
+[group('hoid')]
+setup-nextcloud:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    BW_SESSION=$(cat /tmp/.bw_session 2>/dev/null \
+        || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
+    export BW_SESSION
+
+    ITEM=$(bw get item "Hoid uBlue")
+    NEXTCLOUD_URL=$(printf '%s' "${ITEM}" \
+        | jq -r '.fields[] | select(.name=="NEXTCLOUD_URL") | .value')
+    if [[ -z "${NEXTCLOUD_URL}" ]]; then
+        echo "ERROR: NEXTCLOUD_URL field not found in 'Hoid uBlue' vault item"
+        exit 1
+    fi
+    echo "Setting Nextcloud server URL: ${NEXTCLOUD_URL}"
+    nextcloud --overrideserverurl "${NEXTCLOUD_URL}"
+    echo "Done: Nextcloud server URL configured."
+
 # ── Autostart ────────────────────────────────────────────────────────────────
 
 [group('hoid')]
@@ -333,28 +368,6 @@ setup-autostart:
         > "${AUTOSTART_DIR}/ulauncher.desktop"
 
     echo "Done: autostart entries created for Flameshot, Nextcloud, ULauncher."
-
-# ── VeraCrypt ────────────────────────────────────────────────────────────────
-
-[group('hoid')]
-install-veracrypt:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if rpm -q veracrypt &>/dev/null; then
-        echo "veracrypt already installed: $(rpm -q veracrypt)"
-        exit 0
-    fi
-    echo "-- Fetching latest VeraCrypt release --"
-    RELEASE_JSON=$(curl -sf https://api.github.com/repos/veracrypt/VeraCrypt/releases/latest)
-    VERSION=$(printf '%s' "${RELEASE_JSON}" | jq -r '.tag_name | ltrimstr("VeraCrypt_")')
-    RPM_URL=$(printf '%s' "${RELEASE_JSON}" | jq -r '[.assets[] | select(.name | test("x86_64\\.rpm") and (test("(?i)console") | not)) | .browser_download_url] | first')
-    echo "Downloading VeraCrypt ${VERSION} from ${RPM_URL}"
-    curl -fsSL -o /tmp/veracrypt.rpm "${RPM_URL}"
-    sudo rpm-ostree install /tmp/veracrypt.rpm || {
-        echo "VeraCrypt already layered (pending reboot), skipping."
-    }
-    rm -f /tmp/veracrypt.rpm
-    echo "Done: VeraCrypt ${VERSION} installed. Reboot to apply."
 
 # ── logiops ──────────────────────────────────────────────────────────────────
 

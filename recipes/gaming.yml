@@ -30,22 +30,23 @@ modules:
       - 50-common.just
       - 60-kelsier.just
 
-  # ── 4. FLATPAKS ────────────────────────────────────────────────────────────
+  # ── 4. CHEZMOI ─────────────────────────────────────────────────────────────
+  - type: chezmoi
+    repository: "git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
+    disable-init: true
+    all-users: false
+    run-every: '12h'
+
+  # ── 5. FLATPAKS ────────────────────────────────────────────────────────────
+  - from-file: system-flatpaks.yml
+  - from-file: media-flatpaks.yml
+
   - type: default-flatpaks
     configurations:
       - notify: true
         scope: system
         install:
           - com.discordapp.Discord
-          - org.audacityteam.Audacity
-          - org.flameshot.Flameshot
-          - org.videolan.VLC
-          - io.github.dweymouth.supersonic
-          - com.github.wwmm.easyeffects
-          - io.github.lullabyX.sone
-          - org.localsend.localsend_app
-          - com.obsproject.Studio
-          - org.chromium.Chromium
  
       - scope: user
         install: []

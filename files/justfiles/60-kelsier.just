@@ -1,6 +1,6 @@
 # Kelsier-specific just recipes
 # Run with: ujust <recipe-name>
-# Shared recipes (bw-unlock, install-zsh, setup-mounts, etc.) live in 50-common.just
+# Shared recipes (bw-unlock, install-chezmoi, setup-mounts, etc.) live in 50-common.just
 
 # ── Full first-boot setup ─────────────────────────────────────────────────────
 
@@ -16,7 +16,7 @@ setup-kelsier:
     ujust setup-sudoers
     ujust install-ssh-keys
     ujust setup-mounts
-    ujust install-zsh
+    ujust install-chezmoi
     ujust setup-wallpaper
     ujust setup-avatar
     ujust setup-autostart

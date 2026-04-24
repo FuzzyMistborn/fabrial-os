@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+
+type: default-flatpaks
+system:
+    install:
+      - com.obsproject.Studio
+      - org.audacityteam.Audacity
+      - com.github.wwmm.easyeffects
+      - org.kde.kid3
+      - org.flameshot.Flameshot
+      - io.github.dweymouth.supersonic
+      - io.github.lullabyX.sone
+      - org.videolan.VLC
