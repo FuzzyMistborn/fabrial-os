@@ -28,6 +28,25 @@ setup-kelsier:
     echo "  2. Log out and back in to activate zsh"
     echo ""
 
+# ── SSDs ────────────────────────────────────────────────────────────────
+[group('kelsier')]
+setup-local-disks:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    sudo mkdir -p /var/mnt/crucial-ssd /var/mnt/teams-ssd
+
+    if grep -q "crucial-ssd" /etc/fstab; then
+        echo "fstab entries already present -- skipping."
+    else
+        printf '%s\n' \
+            "/dev/disk/by-uuid/2a3bcf0a-49bf-4e70-b31f-1a4031e6f8ca /var/mnt/crucial-ssd auto nosuid,nodev,nofail,x-gvfs-show 0 0" \
+            "/dev/disk/by-uuid/2a395d9f-121a-42b4-944c-1a48ea619c62 /var/mnt/teams-ssd auto nosuid,nodev,nofail,x-gvfs-show 0 0" \
+            | sudo tee -a /etc/fstab > /dev/null
+        echo "fstab entries added."
+    fi
+    sudo systemctl daemon-reload
+    echo "Done: local SSDs configured."
+
 # ── Autostart ────────────────────────────────────────────────────────────────
 
 [group('kelsier')]

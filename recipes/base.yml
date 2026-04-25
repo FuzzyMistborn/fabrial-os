@@ -13,8 +13,6 @@ modules:
     files:
       - source: system
         destination: /
-      - source: hoid
-        destination: /
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
   - type: dnf
@@ -67,17 +65,12 @@ modules:
     system:
       enabled:
         - tailscaled.service
-        - logid.service
         - sshd.service
-        - restic_backup.timer
-        - restic_prune.timer
-        - remove-unwanted-flatpaks.service
 
   # ── 4. JUSTFILES ───────────────────────────────────────────────────────────
   - type: justfiles
     include:
       - 50-common.just
-      - 60-hoid.just
 
   # ── 5. CHEZMOI ─────────────────────────────────────────────────────────────
   - type: chezmoi
@@ -123,5 +116,5 @@ modules:
           - com.valvesoftware.Steam
           - com.vysp3r.ProtonPlus
 
-  # ── 6. SIGNING ─────────────────────────────────────────────────────────────
+  # ── 7. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing

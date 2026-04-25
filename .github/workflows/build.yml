@@ -28,7 +28,8 @@ jobs:
       matrix:
         recipe:
           # !! Add your recipes here
-          - main.yml
+          - base.yml
+          - framework.yml
           - gaming.yml
           - htpc.yml
     steps:

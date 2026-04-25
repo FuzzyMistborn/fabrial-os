@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: fabrial-os-framework
+description: Personal Aurora (KDE) desktop image (with Framework kernel)
+
+base-image: ghcr.io/ublue-os/aurora
+image-version: stable
+
+modules:
+
+  - from-file: base.yml
+  
+  # ── 1. SYSTEM FILES ────────────────────────────────────────────────────────
+  - type: files
+    files:
+      - source: hoid
+        destination: /
+
+  # ── 2. SYSTEMD SERVICES ────────────────────────────────────────────────────
+  - type: systemd
+    system:
+      enabled:
+        - logid.service
+        - restic_backup.timer
+        - restic_prune.timer
+        - remove-unwanted-flatpaks.service
+
+  # ── 3. JUSTFILES ───────────────────────────────────────────────────────────
+  - type: justfiles
+    include:
+      - 60-hoid.just
+
+  # ── 4. KERNELS ─────────────────────────────────────────────────────────────
+  - type: akmods
+    install:
+      - framework-laptop
+      - v4l2loopback
+  
+  # ── 5. SIGNING ─────────────────────────────────────────────────────────────
+  - type: signing
