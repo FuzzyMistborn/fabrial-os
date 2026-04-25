@@ -148,6 +148,84 @@ setup-mounts:
     sudo systemctl daemon-reload
     echo "Done: mounts configured."
 
+# ── Local Disks ──────────────────────────────────────────────────────────────
+
+[group('common')]
+setup-local-disks:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo ""
+    echo "=== Local Disk Setup ==="
+    echo ""
+
+    # List block devices that have a filesystem, are not swap, and are not currently mounted
+    mapfile -t entries < <(
+        lsblk -Jpo name,uuid,fstype,size,label,mountpoint \
+        | jq -r '
+            .. | objects
+            | select(
+                (.uuid  // "") != "" and
+                (.fstype // "") != "" and .fstype != "swap" and
+                (.mountpoint == null or .mountpoint == "")
+              )
+            | [.name, .uuid, .fstype, .size, (.label // "(no label)")]
+            | @tsv
+        '
+    )
+
+    if [[ ${#entries[@]} -eq 0 ]]; then
+        echo "No unmounted disks with filesystems found."
+        exit 0
+    fi
+
+    printf "  %-4s %-12s %-8s %-8s %-22s %s\n" "NUM" "DEVICE" "TYPE" "SIZE" "LABEL" "UUID"
+    printf "  %-4s %-12s %-8s %-8s %-22s %s\n" "---" "------" "----" "----" "-----" "----"
+    for i in "${!entries[@]}"; do
+        IFS=$'\t' read -r name uuid fstype size label <<< "${entries[$i]}"
+        printf "  %-4s %-12s %-8s %-8s %-22s %s\n" "$((i+1))" "$name" "$fstype" "$size" "$label" "$uuid"
+    done
+    echo ""
+
+    read -rp "Disk numbers to configure (space-separated), or q to quit: " selection
+    [[ "$selection" == "q" ]] && exit 0
+
+    added=0
+    for num in $selection; do
+        if ! [[ "$num" =~ ^[0-9]+$ ]] || (( num < 1 || num > ${#entries[@]} )); then
+            echo "Invalid selection: $num -- skipping"
+            continue
+        fi
+
+        IFS=$'\t' read -r name uuid fstype size label <<< "${entries[$((num-1))]}"
+        echo ""
+        echo "  Selected: $name  ($fstype, $size, label: $label)"
+        echo "  UUID: $uuid"
+        read -rp "  Mount point name under /var/mnt/ (e.g. crucial-ssd): " mountname
+        [[ -z "$mountname" ]] && echo "  No name given -- skipping" && continue
+
+        mountpt="/var/mnt/${mountname}"
+        sudo mkdir -p "$mountpt"
+
+        if grep -q "$uuid" /etc/fstab; then
+            echo "  Already in fstab -- skipping"
+        else
+            echo "/dev/disk/by-uuid/${uuid} ${mountpt} auto nosuid,nodev,nofail,x-gvfs-show 0 0" \
+                | sudo tee -a /etc/fstab > /dev/null
+            echo "  Added: $mountpt"
+            (( added++ )) || true
+        fi
+    done
+
+    echo ""
+    if (( added > 0 )); then
+        sudo systemctl daemon-reload
+        echo "Done: $added fstab $([ "$added" -eq 1 ] && echo entry || echo entries) added."
+        echo "Run 'sudo mount -a' or reboot to mount now."
+    else
+        echo "No new fstab entries added."
+    fi
+
 # ── Chezmoi ──────────────────────────────────────────────────────────────────
 # Requires: ujust install-ssh-keys to have run first (uses ~/.ssh/gitea)
 
