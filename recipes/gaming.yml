@@ -50,7 +50,6 @@ modules:
   
   # ── 6. KERNELS ─────────────────────────────────────────────────────────────
   - type: akmods
-    base: bazzite
     install:
       - v4l2loopback
 
