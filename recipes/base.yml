@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: fabrial-os
-description: Personal Aurora (KDE) desktop image (primarily for Hoid laptop)
+description: Personal Aurora (KDE) desktop image (basic)
 
 base-image: ghcr.io/ublue-os/aurora
 image-version: stable
@@ -9,112 +9,24 @@ image-version: stable
 modules:
 
   # ── 1. SYSTEM FILES ────────────────────────────────────────────────────────
-  - type: files
-    files:
-      - source: system
-        destination: /
+  - from-file: base/files.yml
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
-  - type: dnf
-    repos:
-      files:
-        - https://packages.microsoft.com/yumrepos/vscode/config.repo
-        - https://pkgs.tailscale.com/stable/fedora/tailscale.repo
-      cleanup: true
-
-    install:
-      # skip-unavailable prevents hard failures for packages already in Aurora's
-      # base image or unavailable on this Fedora version.
-      skip-unavailable: true
-      packages:
-        # ── Productivity / Office ──
-        - calibre
-        - thunderbird
-        - nextcloud-client
-
-        # ── Developer tools ──
-        - code               # from VS Code repo above
-        - python3-devel
-        - pipx
-
-        # ── Network / Remote ──
-        - iperf3
-
-        # ── Multimedia ──
-        - mpv
-        - mpv-mpris
-
-        # ── System utilities ──
-        - ncdu
-        - screen
-        - zoxide
-        - hddtemp
-        - ulauncher
-        - https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.24/veracrypt-1.26.24-Fedora-40-x86_64.rpm
-
-        # ── Hardware / Input ──
-        - logiops
-        - solaar
-
-    remove:
-      packages:
-        - plasma-welcome
+  - from-file: base/packages.yml
 
   # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
-  - type: systemd
-    system:
-      enabled:
-        - tailscaled.service
-        - sshd.service
+  - from-file: base/services.yml
 
   # ── 4. JUSTFILES ───────────────────────────────────────────────────────────
-  - type: justfiles
-    include:
-      - 50-common.just
+  - from-file: base/justfiles.yml
 
   # ── 5. CHEZMOI ─────────────────────────────────────────────────────────────
-  - type: chezmoi
-    repository: "git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
-    disable-init: true
-    all-users: false
-    run-every: '12h'
+  - from-file: base/chezmoi.yml
 
   # ── 6. FLATPAKS ────────────────────────────────────────────────────────────
   - from-file: system-flatpaks.yml
   - from-file: media-flatpaks.yml
-
-  - type: default-flatpaks
-    configurations:
-      - notify: false
-        scope: system
-        install:
-          - org.libreoffice.LibreOffice
-          - org.gimp.GIMP
-          - com.github.PintaProject.Pinta
-          - io.gitlab.adhami3310.Converter
-          - us.zoom.Zoom
-          - org.signal.Signal
-          - org.ferdium.Ferdium
-          - md.obsidian.Obsidian
-          - com.jgraph.drawio.desktop
-          - org.remmina.Remmina
-          - org.openscad.OpenSCAD
-          - com.bambulab.BambuStudio
-          - org.bunkus.mkvtoolnix-gui
-          - com.github.jeromerobert.pdfarranger
-          - org.kde.krename
-          - org.kde.skanlite
-          - org.kde.skanpage
-          - org.filezillaproject.Filezilla
-          - io.github.Omniaevo.mqtt5-explorer
-          - com.bitwarden.desktop
-          - com.system76.Popsicle
-          - org.raspberrypi.rpi-imager
-          - org.gnome.Calculator
-          - com.mojang.Minecraft
-          - com.moonlight_stream.Moonlight
-          - com.valvesoftware.Steam
-          - com.vysp3r.ProtonPlus
+  - from-file: base/flatpaks.yml
 
   # ── 7. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing

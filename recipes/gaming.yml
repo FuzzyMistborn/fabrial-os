@@ -47,6 +47,12 @@ modules:
         scope: system
         install:
           - com.discordapp.Discord
+  
+  # ── 6. KERNELS ─────────────────────────────────────────────────────────────
+  - type: akmods
+    base: bazzite
+    install:
+      - v4l2loopback
 
-  # ── 5. SIGNING ─────────────────────────────────────────────────────────────
+  # ── 7. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing

@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+
+type: default-flatpaks
+configurations:
+  - notify: false
+    scope: system
+    install:
+      - org.libreoffice.LibreOffice
+      - org.gimp.GIMP
+      - com.github.PintaProject.Pinta
+      - io.gitlab.adhami3310.Converter
+      - us.zoom.Zoom
+      - org.signal.Signal
+      - org.ferdium.Ferdium
+      - md.obsidian.Obsidian
+      - com.jgraph.drawio.desktop
+      - org.remmina.Remmina
+      - org.openscad.OpenSCAD
+      - com.bambulab.BambuStudio
+      - org.bunkus.mkvtoolnix-gui
+      - com.github.jeromerobert.pdfarranger
+      - org.kde.krename
+      - org.kde.skanlite
+      - org.kde.skanpage
+      - org.filezillaproject.Filezilla
+      - io.github.Omniaevo.mqtt5-explorer
+      - com.bitwarden.desktop
+      - com.system76.Popsicle
+      - org.raspberrypi.rpi-imager
+      - org.gnome.Calculator
+      - com.mojang.Minecraft
+      - com.moonlight_stream.Moonlight
+      - com.valvesoftware.Steam
+      - com.vysp3r.ProtonPlus

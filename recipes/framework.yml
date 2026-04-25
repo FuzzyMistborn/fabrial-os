@@ -8,15 +8,18 @@ image-version: stable
 
 modules:
 
-  - from-file: base.yml
-  
   # ── 1. SYSTEM FILES ────────────────────────────────────────────────────────
   - type: files
     files:
       - source: hoid
         destination: /
+  
+  - from-file: base/files.yml
 
-  # ── 2. SYSTEMD SERVICES ────────────────────────────────────────────────────
+  # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
+  - from-file: base/packages.yml
+
+  # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
   - type: systemd
     system:
       enabled:
@@ -25,16 +28,28 @@ modules:
         - restic_prune.timer
         - remove-unwanted-flatpaks.service
 
-  # ── 3. JUSTFILES ───────────────────────────────────────────────────────────
+  - from-file: base/services.yml
+
+  # ── 4. JUSTFILES ───────────────────────────────────────────────────────────
   - type: justfiles
     include:
       - 60-hoid.just
+  
+  - from-file: base/justfiles.yml
 
-  # ── 4. KERNELS ─────────────────────────────────────────────────────────────
+  # ── 5. CHEZMOI ─────────────────────────────────────────────────────────────
+  - from-file: base/chezmoi.yml
+
+  # ── 6. FLATPAKS ────────────────────────────────────────────────────────────
+  - from-file: system-flatpaks.yml
+  - from-file: media-flatpaks.yml
+  - from-file: base/flatpaks.yml
+
+  # ── 7. KERNELS ─────────────────────────────────────────────────────────────
   - type: akmods
     install:
       - framework-laptop
       - v4l2loopback
-  
-  # ── 5. SIGNING ─────────────────────────────────────────────────────────────
+
+  # ── 8. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing

@@ -1,0 +1,8 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+
+type: chezmoi
+repository: "git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
+disable-init: true
+all-users: false
+run-every: '12h'

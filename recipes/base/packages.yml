@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+
+type: dnf
+repos:
+  files:
+    - https://packages.microsoft.com/yumrepos/vscode/config.repo
+    - https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+  cleanup: true
+
+install:
+  # skip-unavailable prevents hard failures for packages already in Aurora's
+  # base image or unavailable on this Fedora version.
+  skip-unavailable: true
+  packages:
+    # ── Productivity / Office ──
+    - calibre
+    - thunderbird
+    - nextcloud-client
+
+    # ── Developer tools ──
+    - code               # from VS Code repo above
+    - python3-devel
+    - pipx
+
+    # ── Network / Remote ──
+    - iperf3
+
+    # ── Multimedia ──
+    - mpv
+    - mpv-mpris
+
+    # ── System utilities ──
+    - ncdu
+    - screen
+    - zoxide
+    - hddtemp
+    - ulauncher
+    - https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.24/veracrypt-1.26.24-Fedora-40-x86_64.rpm
+
+    # ── Hardware / Input ──
+    - logiops
+    - solaar
+
+remove:
+  packages:
+    - plasma-welcome
