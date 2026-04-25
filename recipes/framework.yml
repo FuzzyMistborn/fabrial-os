@@ -45,10 +45,5 @@ modules:
   - from-file: media-flatpaks.yml
   - from-file: base/flatpaks.yml
 
-  # ── 7. KERNELS ─────────────────────────────────────────────────────────────
-  - type: akmods
-    install:
-      - framework-laptop
-
-  # ── 8. SIGNING ─────────────────────────────────────────────────────────────
+  # ── 7. SIGNING ─────────────────────────────────────────────────────────────
   - type: signing
