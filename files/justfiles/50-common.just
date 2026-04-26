@@ -17,7 +17,7 @@ setup-sudoers:
 # Expected vault items:
 #   SSH Key type items (private key from sshKey field):
 #     "SSH: github"            → ~/.ssh/github
-#     "SSH: gitea"            → ~/.ssh/gitea
+#     "SSH: chezmoi"            → ~/.ssh/chezmoi
 #     "SSH: desktop_lxcs"      → ~/.ssh/desktop_lxcs
 #     "SSH: desktop_ambition"  → ~/.ssh/desktop_ambition
 #
@@ -102,7 +102,7 @@ install-ssh-keys:
 
     echo "-- Installing SSH keys from Bitwarden --"
     _bw_ssh_key "SSH: github"            "${HOME}/.ssh/github"
-    _bw_ssh_key "SSH: gitea"            "${HOME}/.ssh/gitea"
+    _bw_ssh_key "SSH: chezmoi"            "${HOME}/.ssh/chezmoi"
     _bw_ssh_key "SSH: desktop_lxcs"      "${HOME}/.ssh/desktop_lxcs"
     _bw_ssh_key "SSH: desktop_ambition"  "${HOME}/.ssh/desktop_ambition"
     echo "Done: SSH keys installed."
@@ -227,7 +227,7 @@ setup-local-disks:
     fi
 
 # ── Chezmoi ──────────────────────────────────────────────────────────────────
-# Requires: ujust install-ssh-keys to have run first (uses ~/.ssh/gitea)
+# Requires: ujust install-ssh-keys to have run first (uses ~/.ssh/chezmoi)
 
 [group('common')]
 install-chezmoi:
@@ -236,7 +236,7 @@ install-chezmoi:
     CHEZMOI_REPO="git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
 
     echo "-- Initializing chezmoi from ${CHEZMOI_REPO} --"
-    GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/gitea -o IdentitiesOnly=yes" \
+    GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/chezmoi -o IdentitiesOnly=yes" \
         chezmoi init --apply "${CHEZMOI_REPO}"
 
     sudo usermod -s /usr/bin/zsh "$(whoami)"
