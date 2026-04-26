@@ -11,6 +11,6 @@ configurations:
       - com.github.wwmm.easyeffects
       - org.kde.kid3
       - org.flameshot.Flameshot
-      - io.github.dweymouth.supersonic
+      - org.jeffvli.feishin
       - io.github.lullabyX.sone
       - org.videolan.VLC

@@ -7,5 +7,30 @@
   "enabled": true,
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^recipes/.*\\.yml$"],
+      "matchStrings": [
+        "https://github\\.com/joshuar/go-hass-agent/releases/download/v(?<currentValue>[\\d.]+)/go-hass-agent-[\\d.]+-\\d+\\.x86_64\\.rpm"
+      ],
+      "autoReplaceStringTemplate": "https://github.com/joshuar/go-hass-agent/releases/download/v{{{newValue}}}/go-hass-agent-{{{newValue}}}-1.x86_64.rpm",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "joshuar/go-hass-agent",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^recipes/.*\\.yml$"],
+      "matchStrings": [
+        "https://github\\.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_(?<currentValue>[\\d.]+)/veracrypt-[\\d.]+-Fedora-\\d+-x86_64\\.rpm"
+      ],
+      "autoReplaceStringTemplate": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_{{{newValue}}}/veracrypt-{{{newValue}}}-Fedora-40-x86_64.rpm",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "veracrypt/VeraCrypt",
+      "extractVersionTemplate": "^VeraCrypt_(?<version>.+)$",
+      "versioningTemplate": "semver"
+    }
   ]
 }
