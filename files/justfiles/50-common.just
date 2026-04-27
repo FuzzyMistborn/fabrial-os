@@ -236,7 +236,7 @@ install-chezmoi:
     CHEZMOI_REPO="git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
 
     echo "-- Initializing chezmoi from ${CHEZMOI_REPO} --"
-    GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/chezmoi -o IdentitiesOnly=yes" \
+    GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/chezmoi -o IdentitiesOnly=yes -o Hostname=remote.fuzzymistborn.com -p 222" \
         chezmoi init --apply "${CHEZMOI_REPO}"
 
     sudo usermod -s /usr/bin/zsh "$(whoami)"

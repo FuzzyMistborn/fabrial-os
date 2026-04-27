@@ -19,6 +19,9 @@ modules:
 
   # ── 4. JUSTFILES ───────────────────────────────────────────────────────────
   - from-file: base/justfiles.yml
+  - type: justfiles
+    include:
+      - 60-base.just
 
   # ── 5. CHEZMOI ─────────────────────────────────────────────────────────────
   - from-file: base/chezmoi.yml
