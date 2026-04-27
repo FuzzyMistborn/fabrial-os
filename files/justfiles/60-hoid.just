@@ -83,7 +83,7 @@ setup-restic-env:
     export BW_SESSION
 
     echo "-- Restic environment setup (pulling from Bitwarden) --"
-    RESTIC_ITEM=$(bw get item "Hoid uBlue")
+    RESTIC_ITEM=$(bw get item "uBlue Hoid")
 
     _field() { printf '%s' "${RESTIC_ITEM}" \
         | jq -r --arg n "$1" '.fields[] | select(.name==$n) | .value'; }
@@ -203,46 +203,6 @@ setup-printer:
     /usr/bin/lpoptions -d Brother-HL2270DW
     echo "Done: Brother-HL2270DW configured."
 
-# ── konsave ───────────────────────────────────────────────────────────────────
-
-[group('hoid')]
-install-konsave:
-    pipx install konsave
-    echo "Done: konsave installed."
-
-[group('hoid')]
-konsave-import:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    BW_SESSION=$(cat /tmp/.bw_session 2>/dev/null \
-        || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
-    export BW_SESSION
-
-    ITEM=$(bw get item "Hoid uBlue")
-    KONSAVE_URL=$(printf '%s' "${ITEM}" \
-        | jq -r '.fields[] | select(.name=="KONSAVE_URL") | .value')
-    if [[ -z "${KONSAVE_URL}" ]]; then
-        echo "ERROR: KONSAVE_URL field not found in 'Hoid uBlue' vault item"
-        exit 1
-    fi
-    konsave -s "Aurora Default"
-    echo "Saved current profile as 'Aurora Default'."
-    curl -fsSL -o /tmp/hoid.knsv "${KONSAVE_URL}"
-    konsave -i /tmp/hoid.knsv
-    konsave -a hoid
-    rm -f /tmp/hoid.knsv
-    echo "Done: Konsave profile imported and applied."
-
-[group('hoid')]
-konsave-save name="hoid":
-    konsave -s {{name}}
-    echo "KDE profile saved as '{{name}}'."
-
-[group('hoid')]
-konsave-apply name="hoid":
-    konsave -a {{name}}
-    echo "Applied KDE profile '{{name}}'."
-
 # ── Firefox ───────────────────────────────────────────────────────────────────
 
 [group('hoid')]
@@ -253,11 +213,11 @@ firefox-profile-import:
         || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
     export BW_SESSION
 
-    ITEM=$(bw get item "Hoid uBlue")
+    ITEM=$(bw get item "uBlue Hoid")
     FIREFOX_URL=$(printf '%s' "${ITEM}" \
         | jq -r '.fields[] | select(.name=="FIREFOX_PROFILE_URL") | .value')
     if [[ -z "${FIREFOX_URL}" ]]; then
-        echo "ERROR: FIREFOX_PROFILE_URL field not found in 'Hoid uBlue' vault item"
+        echo "ERROR: FIREFOX_PROFILE_URL field not found in 'uBlue Hoid' vault item"
         exit 1
     fi
     echo "Downloading Firefox profile from: ${FIREFOX_URL}"
@@ -304,11 +264,11 @@ thunderbird-profile-import:
         || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
     export BW_SESSION
 
-    ITEM=$(bw get item "Hoid uBlue")
+    ITEM=$(bw get item "uBlue Hoid")
     THUNDERBIRD_URL=$(printf '%s' "${ITEM}" \
         | jq -r '.fields[] | select(.name=="THUNDERBIRD_PROFILE_URL") | .value')
     if [[ -z "${THUNDERBIRD_URL}" ]]; then
-        echo "ERROR: THUNDERBIRD_PROFILE_URL field not found in 'Hoid uBlue' vault item"
+        echo "ERROR: THUNDERBIRD_PROFILE_URL field not found in 'uBlue Hoid' vault item"
         exit 1
     fi
     echo "Downloading Thunderbird profile from: ${THUNDERBIRD_URL}"
@@ -340,11 +300,11 @@ setup-nextcloud:
         || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
     export BW_SESSION
 
-    ITEM=$(bw get item "Hoid uBlue")
+    ITEM=$(bw get item "uBlue Hoid")
     NEXTCLOUD_URL=$(printf '%s' "${ITEM}" \
         | jq -r '.fields[] | select(.name=="NEXTCLOUD_URL") | .value')
     if [[ -z "${NEXTCLOUD_URL}" ]]; then
-        echo "ERROR: NEXTCLOUD_URL field not found in 'Hoid uBlue' vault item"
+        echo "ERROR: NEXTCLOUD_URL field not found in 'uBlue Hoid' vault item"
         exit 1
     fi
     echo "Setting Nextcloud server URL: ${NEXTCLOUD_URL}"

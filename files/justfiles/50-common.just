@@ -226,6 +226,49 @@ setup-local-disks:
         echo "No new fstab entries added."
     fi
 
+# ── Konsave ──────────────────────────────────────────────────────────────────
+
+[group('common')]
+install-konsave:
+    pipx install konsave
+    echo "Done: konsave installed."
+
+[group('common')]
+konsave-import bw_item="uBlue Hoid":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    BW_SESSION=$(cat /tmp/.bw_session 2>/dev/null \
+        || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
+    export BW_SESSION
+
+    BW_ITEM="{{bw_item}}"
+    PROFILE=$(printf '%s' "${BW_ITEM}" | awk '{print tolower($NF)}')
+
+    ITEM=$(bw get item "${BW_ITEM}")
+    KONSAVE_URL=$(printf '%s' "${ITEM}" \
+        | jq -r '.fields[] | select(.name=="KONSAVE_URL") | .value')
+    if [[ -z "${KONSAVE_URL}" ]]; then
+        echo "ERROR: KONSAVE_URL field not found in '${BW_ITEM}' vault item"
+        exit 1
+    fi
+    konsave -s "${BW_ITEM} Default"
+    echo "Saved current profile as '${BW_ITEM} Default'."
+    curl -fsSL -o "/tmp/${PROFILE}.knsv" "${KONSAVE_URL}"
+    konsave -i "/tmp/${PROFILE}.knsv"
+    konsave -a "${PROFILE}"
+    rm -f "/tmp/${PROFILE}.knsv"
+    echo "Done: Konsave profile imported and applied."
+
+[group('common')]
+konsave-save name="hoid":
+    konsave -s {{name}}
+    echo "KDE profile saved as '{{name}}'."
+
+[group('common')]
+konsave-apply name="hoid":
+    konsave -a {{name}}
+    echo "Applied KDE profile '{{name}}'."
+
 # ── Chezmoi ──────────────────────────────────────────────────────────────────
 # Requires: ujust install-ssh-keys to have run first (uses ~/.ssh/chezmoi)
 
@@ -235,9 +278,17 @@ install-chezmoi:
     set -euo pipefail
     CHEZMOI_REPO="git@git.fuzzymistborn.com:FuzzyMistborn/dotfiles.git"
 
+    install -dm755 "${HOME}/.local/bin"
+
     echo "-- Initializing chezmoi from ${CHEZMOI_REPO} --"
     GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/chezmoi -o IdentitiesOnly=yes -o Hostname=remote.fuzzymistborn.com -p 222" \
-        chezmoi init --apply "${CHEZMOI_REPO}"
+        chezmoi init "${CHEZMOI_REPO}"
+
+    echo "-- Pre-applying chezmoi_media_manager --"
+    chezmoi apply "${HOME}/.local/bin/chezmoi_media_manager"
+
+    echo "-- Applying chezmoi --"
+    chezmoi apply
 
     sudo usermod -s /usr/bin/zsh "$(whoami)"
     echo "Done: chezmoi applied, zsh set as default shell. Log out and back in to activate."

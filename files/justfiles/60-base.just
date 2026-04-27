@@ -4,8 +4,8 @@
 
 # ── Full first-boot setup ─────────────────────────────────────────────────────
 
-[group('hoid')]
-setup-hoid:
+[group('base')]
+setup-base:
     #!/usr/bin/env bash
     set -euo pipefail
     echo ""
@@ -16,6 +16,8 @@ setup-hoid:
     ujust setup-sudoers
     ujust install-ssh-keys
     ujust install-chezmoi
+    ujust install-konsave
+    ujust konsave-import "uBlue Base"
     ujust setup-wallpaper
     ujust setup-avatar
     ujust setup-autostart

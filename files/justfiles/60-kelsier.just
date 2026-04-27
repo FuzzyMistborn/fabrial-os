@@ -18,6 +18,8 @@ setup-kelsier:
     ujust setup-mounts
     ujust setup-local-disks
     ujust install-chezmoi
+    ujust install-konsave
+    ujust konsave-import "uBlue Bazzite"
     ujust setup-wallpaper
     ujust setup-avatar
     ujust setup-autostart

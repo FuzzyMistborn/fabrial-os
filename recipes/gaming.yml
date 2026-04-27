@@ -22,6 +22,8 @@ modules:
       skip-unavailable: true
       packages:
         - nextcloud-client
+        - python3-pip
+        - pipx
         - https://github.com/joshuar/go-hass-agent/releases/download/v14.10.5/go-hass-agent-14.10.5-1.x86_64.rpm
 
   # ── 3. JUSTFILES ───────────────────────────────────────────────────────────
