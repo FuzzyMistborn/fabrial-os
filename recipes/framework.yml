@@ -22,8 +22,10 @@ modules:
     install:
       skip-unavailable: true
       packages:
-        - https://download.brother.com/welcome/dlf104036/brscan5-1.5.1-0.x86_64.rpm
         - gtk2
+  - type: script
+    scripts:
+      - install-brscan5.sh
 
   # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
   - type: systemd
