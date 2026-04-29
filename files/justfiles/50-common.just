@@ -284,8 +284,8 @@ install-chezmoi:
     GIT_SSH_COMMAND="ssh -i ${HOME}/.ssh/chezmoi -o IdentitiesOnly=yes -o Hostname=remote.fuzzymistborn.com -p 222" \
         chezmoi init "${CHEZMOI_REPO}"
 
-    echo "-- Pre-applying chezmoi_media_manager --"
-    chezmoi apply "${HOME}/.local/bin/chezmoi_media_manager"
+    echo "-- Pre-applying chezmoi_modify_manager --"
+    chezmoi apply "${HOME}/.local/bin/chezmoi_modify_manager"
 
     echo "-- Applying chezmoi --"
     chezmoi apply
