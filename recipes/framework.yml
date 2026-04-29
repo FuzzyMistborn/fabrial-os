@@ -23,6 +23,8 @@ modules:
       skip-unavailable: true
       packages:
         - gtk2
+        - skanlite
+        - skanpage
   - type: script
     scripts:
       - install-brscan5.sh

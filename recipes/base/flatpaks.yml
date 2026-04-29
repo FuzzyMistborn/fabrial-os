@@ -21,8 +21,6 @@ configurations:
       - org.bunkus.mkvtoolnix-gui
       - com.github.jeromerobert.pdfarranger
       - org.kde.krename
-      - org.kde.skanlite
-      - org.kde.skanpage
       - org.filezillaproject.Filezilla
       - io.github.Omniaevo.mqtt5-explorer
       - com.bitwarden.desktop
