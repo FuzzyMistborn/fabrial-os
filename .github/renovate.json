@@ -31,6 +31,17 @@
       "depNameTemplate": "veracrypt/VeraCrypt",
       "extractVersionTemplate": "^VeraCrypt_(?<version>.+)$",
       "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^recipes/.*\\.yml$"],
+      "matchStrings": [
+        "https://github\\.com/tylerwagler/PlasmaDock/releases/download/v(?<currentValue>[\\d.]+)/plasmadock-[\\d.]+-\\d+\\.fc\\d+\\.x86_64\\.rpm"
+      ],
+      "autoReplaceStringTemplate": "https://github.com/tylerwagler/PlasmaDock/releases/download/v{{{newValue}}}/plasmadock-{{{newValue}}}-1.fc41.x86_64.rpm",
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tylerwagler/PlasmaDock",
+      "versioningTemplate": "semver"
     }
   ]
 }
