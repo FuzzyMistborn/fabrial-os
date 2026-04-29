@@ -103,6 +103,7 @@ install-ssh-keys:
     echo "-- Installing SSH keys from Bitwarden --"
     _bw_ssh_key "SSH: github"            "${HOME}/.ssh/github"
     _bw_ssh_key "SSH: chezmoi"            "${HOME}/.ssh/chezmoi"
+    _bw_ssh_key "SSH: gitea"            "${HOME}/.ssh/gitea"
     _bw_ssh_key "SSH: desktop_lxcs"      "${HOME}/.ssh/desktop_lxcs"
     _bw_ssh_key "SSH: desktop_ambition"  "${HOME}/.ssh/desktop_ambition"
     echo "Done: SSH keys installed."
@@ -286,6 +287,11 @@ install-chezmoi:
 
     echo "-- Pre-applying chezmoi_modify_manager --"
     chezmoi apply "${HOME}/.local/bin/chezmoi_modify_manager"
+    export PATH="${HOME}/.local/bin:${PATH}"
+    if ! command -v chezmoi_modify_manager &>/dev/null; then
+        echo "ERROR: chezmoi_modify_manager not found in PATH after pre-apply; aborting."
+        exit 1
+    fi
 
     echo "-- Applying chezmoi --"
     chezmoi apply
