@@ -18,6 +18,12 @@ modules:
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
   - from-file: base/packages.yml
+  - type: dnf
+    install:
+      skip-unavailable: true
+      packages:
+        - https://download.brother.com/welcome/dlf104036/brscan5-1.5.1-0.x86_64.rpm
+        - gtk2
 
   # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
   - type: systemd
