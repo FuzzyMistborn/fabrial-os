@@ -199,6 +199,7 @@ setup-printer:
     set -euo pipefail
     sudo /usr/sbin/lpadmin -p Brother-HL2270DW -E \
         -v ipp://192.168.10.15/ipp/port1 \
+        -m drv:///brlaser.drv/hl2270dw.ppd \
         -o media=na_letter_8.5x11in
     /usr/bin/lpoptions -d Brother-HL2270DW
     echo "Done: Brother-HL2270DW configured."
