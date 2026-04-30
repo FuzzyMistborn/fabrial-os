@@ -23,6 +23,7 @@ setup-hoid:
     ujust install-chezmoi
     ujust install-vscode-extensions
     ujust setup-printer
+    ujust setup-scanner
     ujust install-konsave
     ujust konsave-import
     ujust firefox-profile-import
@@ -36,8 +37,7 @@ setup-hoid:
     ujust bw-lock
     echo ""
     echo "=== Done! Manual steps still needed: ==="
-    echo "  1. ujust enable-wol  (desktop/wired only)"
-    echo "  2. Log out and back in to activate zsh"
+    echo "  1. Log out and back in to activate zsh and scanner group membership"
     echo ""
 
 # ── SSH ───────────────────────────────────────────────────────────────────────
@@ -113,7 +113,6 @@ setup-restic-env:
     sudo chown root:root /etc/restic.env
     sudo chmod u=rw,g=,o= /etc/restic.env
     echo "Done: /etc/restic.env written."
-    echo "Next: create ~/.autorestic.yml with your backend/location config."
 
 [group('hoid')]
 setup-autorestic:
@@ -203,6 +202,33 @@ setup-printer:
         -o media=na_letter_8.5x11in
     /usr/bin/lpoptions -d Brother-HL2270DW
     echo "Done: Brother-HL2270DW configured."
+
+# ── Scanner ───────────────────────────────────────────────────────────────────
+
+[group('hoid')]
+setup-scanner:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    USERNAME=$(whoami)
+
+    echo "-- Adding ${USERNAME} to scanner group --"
+    sudo usermod -aG scanner "${USERNAME}"
+
+    echo "-- Fixing brscan5 udev rules --"
+    UDEV_RULES=$(ls /etc/udev/rules.d/60-brother-mfp-brscan5-*.rules 2>/dev/null | head -1)
+    if [[ -z "${UDEV_RULES}" ]]; then
+        echo "WARNING: brscan5 udev rules file not found -- was brscan5 installed at build time?"
+    else
+        sudo sed -i 's/#MODE="0666"/MODE="0666"/' "${UDEV_RULES}"
+        sudo sed -i 's/#GROUP="scanner"/GROUP="scanner"/' "${UDEV_RULES}"
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger
+        echo "Done: udev rules updated at ${UDEV_RULES}"
+    fi
+
+    echo "Done: scanner configured."
+    echo "NOTE: Unplug and replug the DS-740D, then log out and back in for group membership to take effect."
+    echo "      Test with: scanimage -L"
 
 # ── Firefox ───────────────────────────────────────────────────────────────────
 
