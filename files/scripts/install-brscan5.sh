@@ -8,12 +8,10 @@ curl -L -o /tmp/brscan5.rpm https://download.brother.com/welcome/dlf104036/brsca
 rpm -i --nodigest --nosignature /tmp/brscan5.rpm
 rm /tmp/brscan5.rpm
 
-# Symlink brscan5 backend library into the system SANE directory so
-# frontends like Skanlite can find it
-BRSCAN5_LIB=$(find /opt/brother/scanner/brscan5/ -name "libsane-brother5.so.*" | sort | tail -1)
+# Symlink brscan5 backend so frontends like Skanlite can find it
+BRSCAN5_LIB=$(find /usr/lib64/sane/ -name "libsane-brother5.so.*" | sort | tail -1)
 if [[ -n "${BRSCAN5_LIB}" ]]; then
     LIB_NAME=$(basename "${BRSCAN5_LIB}")
-    cp "${BRSCAN5_LIB}" /usr/lib64/sane/
     ln -sf "/usr/lib64/sane/${LIB_NAME}" /usr/lib64/sane/libsane-brother5.so.1
     ln -sf /usr/lib64/sane/libsane-brother5.so.1 /usr/lib64/sane/libsane-brother5.so
 fi
