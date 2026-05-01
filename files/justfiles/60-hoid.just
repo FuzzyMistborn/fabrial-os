@@ -37,7 +37,8 @@ setup-hoid:
     ujust bw-lock
     echo ""
     echo "=== Done! Manual steps still needed: ==="
-    echo "  1. Log out and back in to activate zsh and scanner group membership"
+    echo "  1. ujust enable-wol  (desktop/wired only)"
+    echo "  2. Log out and back in to activate zsh and scanner group membership"
     echo ""
 
 # ── SSH ───────────────────────────────────────────────────────────────────────
@@ -198,10 +199,15 @@ setup-printer:
     set -euo pipefail
     sudo /usr/sbin/lpadmin -p Brother-HL2270DW -E \
         -v ipp://192.168.10.15/ipp/port1 \
-        -m drv:///brlaser.drv/hl2270dw.ppd \
+        -m everywhere \
         -o media=na_letter_8.5x11in
     /usr/bin/lpoptions -d Brother-HL2270DW
-    echo "Done: Brother-HL2270DW configured."
+    sudo /usr/sbin/lpadmin -p Brother-DCP-L2640dw -E \
+        -v ipp://192.168.30.10/ipp/port1 \
+        -m everywhere \
+        -o media=na_letter_8.5x11in
+    /usr/bin/lpoptions -d Brother-DCP-L2640dw
+    echo "Done: Printers configured."
 
 # ── Scanner ───────────────────────────────────────────────────────────────────
 
@@ -210,6 +216,12 @@ setup-scanner:
     #!/usr/bin/env bash
     set -euo pipefail
     USERNAME=$(whoami)
+
+    echo "-- Creating scanner group if needed --"
+    if ! getent group scanner > /dev/null 2>&1; then
+        sudo groupadd scanner
+        echo "Created scanner group."
+    fi
 
     echo "-- Adding ${USERNAME} to scanner group --"
     sudo usermod -aG scanner "${USERNAME}"

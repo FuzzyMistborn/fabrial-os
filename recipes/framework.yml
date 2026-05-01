@@ -25,7 +25,6 @@ modules:
         - gtk2
         - skanlite
         - skanpage
-        - brlaser
   - type: script
     scripts:
       - install-brscan5.sh
