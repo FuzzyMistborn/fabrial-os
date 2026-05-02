@@ -34,8 +34,6 @@ modules:
     system:
       enabled:
         - logid.service
-        - restic_backup.timer
-        - restic_prune.timer
         - remove-unwanted-flatpaks.service
 
   - from-file: base/services.yml

@@ -17,9 +17,8 @@ setup-hoid:
     ujust enable-ssh
     ujust install-ssh-keys
     ujust setup-mounts
-    ujust install-backup-tools
-    ujust setup-restic-env
-    ujust setup-autorestic
+    ujust install-backrest
+    ujust backrest-import-config
     ujust install-chezmoi
     ujust install-vscode-extensions
     ujust setup-printer
@@ -37,8 +36,7 @@ setup-hoid:
     ujust bw-lock
     echo ""
     echo "=== Done! Manual steps still needed: ==="
-    echo "  1. ujust enable-wol  (desktop/wired only)"
-    echo "  2. Log out and back in to activate zsh and scanner group membership"
+    echo "  Log out and back in to activate zsh and scanner group membership"
     echo ""
 
 # ── SSH ───────────────────────────────────────────────────────────────────────
@@ -48,127 +46,65 @@ enable-ssh:
     sudo systemctl enable --now sshd
     echo "Done: SSH enabled."
 
-# ── Restic / Autorestic ───────────────────────────────────────────────────────
+# ── Backrest ─────────────────────────────────────────────────────────────────
 
 [group('hoid')]
-install-backup-tools:
+install-backrest:
     #!/usr/bin/env bash
     set -euo pipefail
-    echo "-- Installing runitor --"
-    RUNITOR_VER=$(curl -sf https://api.github.com/repos/bdd/runitor/releases/latest \
+    echo "-- Installing Backrest --"
+    BACKREST_VER=$(curl -sf https://api.github.com/repos/garethgeorge/backrest/releases/latest \
         | grep '"tag_name"' | cut -d'"' -f4 | sed 's/v//')
-    curl -fsSL -o /tmp/runitor \
-        "https://github.com/bdd/runitor/releases/download/v${RUNITOR_VER}/runitor-v${RUNITOR_VER}-linux-amd64"
-    chmod +x /tmp/runitor
-    sudo mv /tmp/runitor /usr/local/bin/runitor
-    sudo restorecon -v /usr/local/bin/runitor
-    echo "runitor ${RUNITOR_VER} installed."
-
-    echo "-- Installing autorestic --"
-    AUTORESTIC_VER=$(curl -sf https://api.github.com/repos/cupcakearmy/autorestic/releases/latest \
-        | grep '"tag_name"' | cut -d'"' -f4 | sed 's/v//')
-    curl -fsSL -o /tmp/autorestic.bz2 \
-        "https://github.com/cupcakearmy/autorestic/releases/download/v${AUTORESTIC_VER}/autorestic_${AUTORESTIC_VER}_linux_amd64.bz2"
-    bunzip2 -f /tmp/autorestic.bz2
-    chmod +x /tmp/autorestic
-    sudo mv /tmp/autorestic /usr/local/bin/autorestic
-    sudo restorecon -v /usr/local/bin/autorestic
-    echo "autorestic ${AUTORESTIC_VER} installed."
+    curl -fsSL -o /tmp/backrest.tar.gz \
+        "https://github.com/garethgeorge/backrest/releases/download/v${BACKREST_VER}/backrest_Linux_x86_64.tar.gz"
+    mkdir -p /tmp/backrest-install
+    tar -xzf /tmp/backrest.tar.gz -C /tmp/backrest-install
+    cd /tmp/backrest-install && bash install.sh
+    sudo restorecon -v /usr/local/bin/backrest
+    rm -rf /tmp/backrest.tar.gz /tmp/backrest-install
+    echo "Done: Backrest ${BACKREST_VER} installed and service started."
+    echo ""
+    echo "Open http://localhost:9898 to complete setup."
 
 [group('hoid')]
-setup-restic-env:
+backrest-import-config:
     #!/usr/bin/env bash
     set -euo pipefail
-    BW_SESSION=$(cat /tmp/.bw_session 2>/dev/null \
-        || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
+    BW_SESSION=$(cat /tmp/.bw_session 2>/dev/null         || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
     export BW_SESSION
 
-    echo "-- Restic environment setup (pulling from Bitwarden) --"
-    RESTIC_ITEM=$(bw get item "uBlue Hoid")
+    echo "-- Importing Backrest config from Bitwarden --"
+    CONFIG=$(bw get notes "Hoid Backrest Config" 2>/dev/null)
+    if [[ -z "${CONFIG}" ]]; then
+        echo "ERROR: 'Hoid Backrest Config' item not found in Bitwarden or notes field is empty"
+        exit 1
+    fi
 
-    _field() { printf '%s' "${RESTIC_ITEM}" \
-        | jq -r --arg n "$1" '.fields[] | select(.name==$n) | .value'; }
+    CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/backrest"
+    mkdir -p "${CONFIG_DIR}"
 
-    RESTIC_PASS=$(printf '%s' "${RESTIC_ITEM}" | jq -r '.login.password')
-    REST_USER=$(_field "REST_USERNAME")
-    REST_PASS=$(_field "REST_PASSWORD")
-    HC_BACKUP=$(_field "HC_BACKUP_UUID")
-    HC_PRUNE=$(_field "HC_PRUNE_UUID")
-    HC_CHECK=$(_field "HC_CHECK_UUID")
-    HC_URL=$(_field "HC_PING_URL")
-    REST_URL=$(_field "REST_URL")
+    # Stop service before replacing config
+    sudo systemctl stop backrest.service 2>/dev/null || true
 
-    ENV_FILE=$(mktemp)
-    printf '%s\n' \
-        "HC_BACKUP_UUID=${HC_BACKUP}" \
-        "HC_PRUNE_UUID=${HC_PRUNE}" \
-        "HC_CHECK_UUID=${HC_CHECK}" \
-        "HC_PING_URL=${HC_URL}" \
-        "RESTIC_PASSWORD=${RESTIC_PASS}" \
-        "RESTIC_REST_USERNAME=${REST_USER}" \
-        "RESTIC_REST_PASSWORD=${REST_PASS}" \
-        "REST_URL=${REST_URL}" \
-        > "${ENV_FILE}"
-    sudo cp "${ENV_FILE}" /etc/restic.env
-    rm -f "${ENV_FILE}"
-    sudo chown root:root /etc/restic.env
-    sudo chmod u=rw,g=,o= /etc/restic.env
-    echo "Done: /etc/restic.env written."
+    printf '%s' "${CONFIG}" > "${CONFIG_DIR}/config.json"
+    chmod u=rw,g=,o= "${CONFIG_DIR}/config.json"
+    echo "Config written to ${CONFIG_DIR}/config.json"
+
+    sudo systemctl start backrest.service
+    echo "Done: Backrest config imported and service restarted."
 
 [group('hoid')]
-setup-autorestic:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    source <(sudo cat /etc/restic.env)
-
-    printf '%s\n' \
-        "version: 2" \
-        "" \
-        "backends:" \
-        "    local_files:" \
-        "        type: rest" \
-        "        path: ${REST_URL}" \
-        "        key: ${RESTIC_PASSWORD}" \
-        "        rest:" \
-        "            user: ${RESTIC_REST_USERNAME}" \
-        "            password: ${RESTIC_REST_PASSWORD}" \
-        "" \
-        "locations:" \
-        "    files:" \
-        "        from: ${HOME}" \
-        "        to:" \
-        "        - local_files" \
-        "        options:" \
-        "            backup:" \
-        "                exclude:" \
-        "                - .cache*" \
-        "                - Nextcloud" \
-        "                - Downloads" \
-        "                - git" \
-        "                - '*steam*'" \
-        "            forget:" \
-        "                keep-daily: 3" \
-        "                keep-weekly: 4" \
-        "                keep-monthly: 2" \
-        > "${HOME}/.autorestic.yml"
-    chmod u=rw,g=,o= "${HOME}/.autorestic.yml"
-    echo "Done: ~/.autorestic.yml written."
+backrest-open:
+    xdg-open http://localhost:9898
 
 [group('hoid')]
-restic-backup-now:
-    sudo /usr/local/bin/autorestic backup -a
+backrest-restart:
+    sudo systemctl restart backrest.service
+    echo "Done: Backrest restarted."
 
 [group('hoid')]
-restic-prune-now:
-    sudo /usr/local/bin/autorestic forget -a --prune
-
-[group('hoid')]
-restic-check:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    source <(sudo cat /etc/restic.env)
-    /usr/local/bin/runitor -api-url "${HC_PING_URL}" -uuid "${HC_CHECK_UUID}" -- \
-        /usr/local/bin/autorestic exec -a -- check
+backrest-logs:
+    journalctl -u backrest.service -f
 
 # ── VS Code Extensions ────────────────────────────────────────────────────────
 
@@ -197,17 +133,20 @@ install-vscode-extensions:
 setup-printer:
     #!/usr/bin/env bash
     set -euo pipefail
-    sudo /usr/sbin/lpadmin -p Brother-HL2270DW -E \
-        -v ipp://192.168.10.15/ipp/port1 \
-        -m everywhere \
-        -o media=na_letter_8.5x11in
-    /usr/bin/lpoptions -d Brother-HL2270DW
-    sudo /usr/sbin/lpadmin -p Brother-DCP-L2640dw -E \
+    # Brother DCP-L2640DW (network, IPP Everywhere)
+    sudo /usr/sbin/lpadmin -p Brother-DCP-L2640DW -E \
         -v ipp://192.168.30.10/ipp/port1 \
         -m everywhere \
         -o media=na_letter_8.5x11in
-    /usr/bin/lpoptions -d Brother-DCP-L2640dw
-    echo "Done: Printers configured."
+
+    # Brother HL-2270DW (network, brlaser PPD)
+    sudo /usr/sbin/lpadmin -p Brother-HL2270DW -E \
+        -v ipp://192.168.30.9/ipp/port1 \
+        -m drv:///brlaser.drv/br2270d.ppd \
+        -o media=na_letter_8.5x11in
+
+    /usr/bin/lpoptions -d Brother-DCP-L2640DW
+    echo "Done: Brother-DCP-L2640DW and Brother-HL2270DW configured."
 
 # ── Scanner ───────────────────────────────────────────────────────────────────
 
