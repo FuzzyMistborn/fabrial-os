@@ -13,6 +13,7 @@ modules:
     files:
       - source: system
         destination: /
+  - from-file: base/groups.yml        
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
   - type: dnf

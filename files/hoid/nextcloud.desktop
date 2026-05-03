@@ -1,0 +1,23 @@
+[Desktop Entry]
+Actions=Quit;
+Categories=Utility;X-SuSE-SyncUtility;
+Comment=Nextcloud desktop synchronization client
+Exec=nextcloud %u --background
+GenericName=Folder Sync
+Icon=Nextcloud
+Implements=org.freedesktop.CloudProviders
+Keywords=Nextcloud;syncing;file;sharing;
+MimeType=application/vnd.nextcloud;x-scheme-handler/nc;
+Name=Nextcloud Desktop
+SingleMainWindow=true
+Type=Application
+X-GNOME-Autostart-Delay=3
+
+[Desktop Action Quit]
+Exec=nextcloud --quit
+Icon=nextcloud
+Name=Quit Nextcloud
+
+[org.freedesktop.CloudProviders]
+BusName=com.nextcloudgmbh.Nextcloud
+ObjectPath=/com/nextcloudgmbh/Nextcloud

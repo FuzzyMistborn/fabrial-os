@@ -15,6 +15,7 @@ modules:
         destination: /
   
   - from-file: base/files.yml
+  - from-file: base/groups.yml
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
   - from-file: base/packages.yml
