@@ -4,7 +4,7 @@ name: fabrial-os-framework
 description: Personal Aurora (KDE) desktop image (with Framework kernel)
 
 base-image: ghcr.io/ublue-os/aurora
-image-version: stable
+image-version: latest
 
 modules:
 
