@@ -302,13 +302,13 @@ install-chezmoi:
 # ── Wallpaper ────────────────────────────────────────────────────────────────
 
 [group('common')]
-setup-wallpaper desktop="stormlight_arc1_wallpaper_uw.png" sddm="WayofKings.jpg":
+setup-wallpaper desktop="stormlight_arc1_wallpaper_uw.png" login="WayofKings.jpg":
     #!/usr/bin/env bash
     set -euo pipefail
     DESKTOP_IMG="/usr/backgrounds/{{desktop}}"
-    SDDM_IMG="/usr/backgrounds/{{sddm}}"
+    LOGIN_IMG="/usr/backgrounds/{{login}}"
 
-    for img in "${DESKTOP_IMG}" "${SDDM_IMG}"; do
+    for img in "${DESKTOP_IMG}" "${LOGIN_IMG}"; do
         if [[ ! -f "${img}" ]]; then
             echo "ERROR: ${img} not found. Available wallpapers:"
             ls /usr/backgrounds/
@@ -319,12 +319,11 @@ setup-wallpaper desktop="stormlight_arc1_wallpaper_uw.png" sddm="WayofKings.jpg"
     echo "-- Applying desktop wallpaper --"
     plasma-apply-wallpaperimage "${DESKTOP_IMG}"
 
-    echo "-- Applying SDDM login wallpaper --"
-    sudo mkdir -p /etc/sddm.conf.d
-    printf '[Theme]\nBackground=%s\n' "${SDDM_IMG}" \
-        | sudo tee /etc/sddm.conf.d/10-wallpaper.conf > /dev/null
+    echo "-- Applying plasma-login wallpaper --"
+    printf '[Greeter]\nWallpaperPlugin=org.kde.image\n\n[Greeter][Wallpaper][org.kde.image][General]\nImage=file://%s\n' "${LOGIN_IMG}" \
+        | sudo tee /etc/plasmalogin.conf > /dev/null
 
-    echo "Done: desktop → ${DESKTOP_IMG}, SDDM → ${SDDM_IMG}."
+    echo "Done: desktop → ${DESKTOP_IMG}, login → ${LOGIN_IMG}."
 
 # ── Avatar ───────────────────────────────────────────────────────────────────
 

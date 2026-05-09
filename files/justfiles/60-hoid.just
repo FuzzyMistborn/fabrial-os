@@ -299,74 +299,7 @@ setup-autostart:
     AUTOSTART_DIR="${HOME}/.config/autostart"
     mkdir -p "${AUTOSTART_DIR}"
 
-    cat > "${AUTOSTART_DIR}/flameshot.desktop" << 'EOF'
-[Desktop Entry]
-Actions=Configure;Capture;Launcher;
-Categories=Graphics;
-Comment=Powerful yet simple to use screenshot software.
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/flameshot org.flameshot.Flameshot
-GenericName=Screenshot tool
-Icon=org.flameshot.Flameshot
-Keywords=flameshot;screenshot;capture;shutter;
-Name=Flameshot
-StartupNotify=false
-StartupWMClass=flameshot
-Terminal=false
-Type=Application
-X-DBUS-ServiceName=org.flameshot.Flameshot
-X-DBUS-StartupType=Unique
-X-Flatpak=org.flameshot.Flameshot
-X-KDE-DBUS-Restricted-Interfaces=org.kde.kwin.Screenshot,org.kde.KWin.ScreenShot2
-
-[Desktop Action Capture]
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=flameshot org.flameshot.Flameshot gui --delay 500
-Name=Take screenshot
-
-[Desktop Action Configure]
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=flameshot org.flameshot.Flameshot config
-Name=Configure
-
-[Desktop Action Launcher]
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=flameshot org.flameshot.Flameshot launcher
-Name=Open launcher
-EOF
-    cat > "${AUTOSTART_DIR}/nextcloud.desktop" << 'EOF'
-[Desktop Entry]
-Actions=Quit;
-Categories=Utility;X-SuSE-SyncUtility;
-Comment=Nextcloud desktop synchronization client
-Exec=nextcloud %u --background
-GenericName=Folder Sync
-Icon=Nextcloud
-Implements=org.freedesktop.CloudProviders
-Keywords=Nextcloud;syncing;file;sharing;
-MimeType=application/vnd.nextcloud;x-scheme-handler/nc;
-Name=Nextcloud Desktop
-SingleMainWindow=true
-Type=Application
-X-GNOME-Autostart-Delay=3
-
-[Desktop Action Quit]
-Exec=nextcloud --quit
-Icon=nextcloud
-Name=Quit Nextcloud
-
-[org.freedesktop.CloudProviders]
-BusName=com.nextcloudgmbh.Nextcloud
-ObjectPath=/com/nextcloudgmbh/Nextcloud
-EOF
-    cat > "${AUTOSTART_DIR}/ulauncher.desktop" << 'EOF'
-[Desktop Entry]
-Categories=GNOME;GTK;Utility;
-Comment=Application launcher for Linux
-Exec=env WEBKIT_DISABLE_COMPOSITING_MODE=1 GDK_BACKEND=x11 /usr/bin/ulauncher --hide-window
-GenericName=Launcher
-Icon=ulauncher
-Name=Ulauncher
-Terminal=false
-TryExec=/usr/bin/ulauncher
-Type=Application
-EOF
+    cp /usr/share/fabrial-os/autostart/*.desktop "${AUTOSTART_DIR}/"
 
     echo "Done: autostart entries created for Flameshot, Nextcloud, ULauncher."
 
