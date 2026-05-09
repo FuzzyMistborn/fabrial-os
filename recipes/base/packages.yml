@@ -3,9 +3,12 @@
 
 type: dnf
 repos:
+  keys:
+    - https://repo.vivaldi.com/archive/linux_signing_key.pub
   files:
     - https://packages.microsoft.com/yumrepos/vscode/config.repo
     - https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+    - https://repo.vivaldi.com/archive/vivaldi-fedora.repo
   cleanup: true
 
 install:
@@ -13,6 +16,9 @@ install:
   # base image or unavailable on this Fedora version.
   skip-unavailable: true
   packages:
+    # ── Web browsers ──
+    - vivaldi-stable
+
     # ── Productivity / Office ──
     - calibre
     - thunderbird
