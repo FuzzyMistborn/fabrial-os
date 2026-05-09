@@ -51,3 +51,4 @@ install:
 remove:
   packages:
     - plasma-welcome
+    - pipewire-config-raop
