@@ -18,6 +18,7 @@ configurations:
       - org.remmina.Remmina
       - org.openscad.OpenSCAD
       - com.bambulab.BambuStudio
+      - com.orcaslicer.OrcaSlicer
       - org.bunkus.mkvtoolnix-gui
       - com.github.jeromerobert.pdfarranger
       - org.kde.krename
