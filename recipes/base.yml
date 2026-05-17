@@ -14,6 +14,9 @@ modules:
 
   # ── 2. RPM PACKAGES ────────────────────────────────────────────────────────
   - from-file: base/packages.yml
+  - type: script
+    scripts:
+      - install-snapmaker-orca.sh
 
   # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
   - from-file: base/services.yml
