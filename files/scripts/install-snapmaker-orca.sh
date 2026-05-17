@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION="V2.3.1"
-ZIP_URL="https://github.com/Snapmaker/OrcaSlicer/releases/download/${VERSION}/Snapmaker_Orca_Linux_ubuntu_2404_${VERSION}.zip"
+VERSION="v2.3.1"
+ZIP_URL="https://github.com/Snapmaker/OrcaSlicer/releases/download/${VERSION}/Snapmaker_Orca_Linux_ubuntu_2404_${VERSION^}.zip"
 INSTALL_DIR="/usr/local/lib/snapmaker-orca"
 WORK_DIR="/tmp/snapmaker-orca-install"
 
