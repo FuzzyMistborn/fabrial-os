@@ -19,6 +19,7 @@ if [[ -z "${APPIMAGE}" ]]; then
 fi
 
 install -m755 "${APPIMAGE}" "${INSTALL_DIR}/OrcaSlicer.AppImage"
+mkdir -p /usr/local/bin
 ln -sf "${INSTALL_DIR}/OrcaSlicer.AppImage" /usr/local/bin/OrcaSlicer
 
 # Extract icon from AppImage (no FUSE needed with --appimage-extract)
