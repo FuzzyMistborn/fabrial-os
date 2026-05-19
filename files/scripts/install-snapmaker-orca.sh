@@ -3,12 +3,11 @@ set -euo pipefail
 
 VERSION="v2.3.1"
 ZIP_URL="https://github.com/Snapmaker/OrcaSlicer/releases/download/${VERSION}/Snapmaker_Orca_Linux_ubuntu_2404_${VERSION^}.zip"
-INSTALL_DIR="/usr/lib/snapmaker-orca"
 WORK_DIR="/tmp/snapmaker-orca-install"
 
 echo "-- Installing Snapmaker OrcaSlicer ${VERSION} --"
 
-mkdir -p "${INSTALL_DIR}" "${WORK_DIR}"
+mkdir -p "${WORK_DIR}"
 curl -fsSL -o "${WORK_DIR}/snapmaker-orca.zip" "${ZIP_URL}"
 unzip -o "${WORK_DIR}/snapmaker-orca.zip" -d "${WORK_DIR}/extracted/"
 
@@ -18,10 +17,9 @@ if [[ -z "${APPIMAGE}" ]]; then
     exit 1
 fi
 
-install -m755 "${APPIMAGE}" "${INSTALL_DIR}/OrcaSlicer.AppImage"
-ln -sf "${INSTALL_DIR}/OrcaSlicer.AppImage" /usr/bin/OrcaSlicer
+install -m755 "${APPIMAGE}" /usr/bin/OrcaSlicer
 
 rm -rf "${WORK_DIR}"
 
 echo "Done: Snapmaker OrcaSlicer ${VERSION} installed"
-ls -la "${INSTALL_DIR}/"
+ls -la /usr/bin/OrcaSlicer
