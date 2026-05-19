@@ -3,7 +3,7 @@ set -euo pipefail
 
 VERSION="v2.3.1"
 ZIP_URL="https://github.com/Snapmaker/OrcaSlicer/releases/download/${VERSION}/Snapmaker_Orca_Linux_ubuntu_2404_${VERSION^}.zip"
-INSTALL_DIR="/usr/local/lib/snapmaker-orca"
+INSTALL_DIR="/usr/lib/snapmaker-orca"
 WORK_DIR="/tmp/snapmaker-orca-install"
 
 echo "-- Installing Snapmaker OrcaSlicer ${VERSION} --"
@@ -19,8 +19,7 @@ if [[ -z "${APPIMAGE}" ]]; then
 fi
 
 install -m755 "${APPIMAGE}" "${INSTALL_DIR}/OrcaSlicer.AppImage"
-mkdir -p /usr/local/bin
-ln -sf "${INSTALL_DIR}/OrcaSlicer.AppImage" /usr/local/bin/OrcaSlicer
+ln -sf "${INSTALL_DIR}/OrcaSlicer.AppImage" /usr/bin/OrcaSlicer
 
 # Extract icon from AppImage (no FUSE needed with --appimage-extract)
 mkdir -p "${WORK_DIR}/appimage-extract"
