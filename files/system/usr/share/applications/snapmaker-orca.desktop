@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Snapmaker OrcaSlicer
 Comment=3D Printing Slicer (Snapmaker Edition)
-Exec=/usr/bin/OrcaSlicer
+Exec=/usr/local/bin/OrcaSlicer
 Icon=OrcaSlicer
 Terminal=false
 Type=Application
