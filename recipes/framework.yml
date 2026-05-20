@@ -36,6 +36,7 @@ modules:
       enabled:
         - logid.service
         - remove-unwanted-flatpaks.service
+        - install-mqtt-explorer.service
 
   - from-file: base/services.yml
 

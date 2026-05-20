@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MQTT Explorer
+Comment=MQTT Client and Debugger
+Exec=/usr/local/bin/MQTT_Explorer
+Icon=MQTT_Explorer
+Terminal=false
+Type=Application
+Categories=Development;Network;
+StartupNotify=true

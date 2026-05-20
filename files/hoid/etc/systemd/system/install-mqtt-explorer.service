@@ -1,0 +1,13 @@
+[Unit]
+Description=Install MQTT Explorer AppImage
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=!/usr/local/bin/MQTT_Explorer
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/lib/fabrial-os/install-mqtt-explorer.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

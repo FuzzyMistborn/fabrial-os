@@ -6,7 +6,7 @@ ConditionPathExists=!/usr/local/bin/OrcaSlicer
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/fabrial-os/install-snapmaker-orca.sh
+ExecStart=/bin/bash /usr/lib/fabrial-os/install-snapmaker-orca.sh
 RemainAfterExit=yes
 
 [Install]

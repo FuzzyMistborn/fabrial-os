@@ -18,11 +18,11 @@ configurations:
       - org.remmina.Remmina
       - org.openscad.OpenSCAD
       - com.bambulab.BambuStudio
+      - com.orcaslicer.OrcaSlicer
       - org.bunkus.mkvtoolnix-gui
       - com.github.jeromerobert.pdfarranger
       - org.kde.krename
       - org.filezillaproject.Filezilla
-      - io.github.Omniaevo.mqtt5-explorer
       - com.bitwarden.desktop
       - com.system76.Popsicle
       - org.raspberrypi.rpi-imager

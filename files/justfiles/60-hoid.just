@@ -27,7 +27,6 @@ setup-hoid:
     ujust konsave-import
     ujust firefox-profile-import
     ujust thunderbird-profile-import
-    ujust install-mqtt-explorer
     ujust setup-wallpaper
     ujust setup-avatar
     ujust setup-nextcloud
@@ -322,20 +321,3 @@ fingerprint-disable:
     sudo authselect disable-feature with-fingerprint
     echo "Done: fingerprint disabled."
 
-# ── AppImages ────────────────────────────────────────────────────────────────
-
-[group('hoid')]
-install-mqtt-explorer:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    BIN_DIR="${HOME}/.local/bin"
-    APPIMAGE="${BIN_DIR}/MQTT_Explorer.AppImage"
-    mkdir -p "${BIN_DIR}" "${HOME}/.local/share/applications"
-    echo "-- Installing MQTT Explorer --"
-    APPIMAGE_URL="https://github.com/thomasnordquist/MQTT-Explorer/releases/download/0.0.0-0.4.0-beta1/MQTT-Explorer-0.4.0-beta1.AppImage"
-    wget -q --show-progress -O "${APPIMAGE}" "${APPIMAGE_URL}"
-    chmod 744 "${APPIMAGE}"
-    printf '[Desktop Entry]\nType=Application\nName=MQTT Explorer\nExec=%s\nIcon=/usr/share/pixmaps/MQTT_Explorer.png\nCategories=Development;\nTerminal=false\n' \
-        "${APPIMAGE}" \
-        > "${HOME}/.local/share/applications/MQTT_Explorer.desktop"
-    echo "Done: MQTT Explorer 0.4.0-beta1 installed."
