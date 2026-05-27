@@ -6,4 +6,3 @@ system:
   enabled:
     - tailscaled.service
     - sshd.service
-    - install-snapmaker-orca.service
