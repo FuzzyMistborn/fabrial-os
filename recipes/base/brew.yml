@@ -1,0 +1,8 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-v1.json
+
+type: brew
+install:
+  - yt-dlp
+  - claude-code
+  - iperf3
