@@ -347,6 +347,19 @@ setup-avatar avatar="avatar.png":
 
     echo "Done: avatar set for ${USERNAME}."
 
+# ── Brew Packages ────────────────────────────────────────────────────────────
+
+[group('common')]
+install-brew-packages:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if ! command -v brew &>/dev/null; then
+        echo "ERROR: brew not found. Is the brew module enabled in your image?"
+        exit 1
+    fi
+    brew install yt-dlp claude-code iperf3
+    echo "Done: brew packages installed."
+
 # ── Wake-on-LAN ───────────────────────────────────────────────────────────────
 
 [group('common')]
