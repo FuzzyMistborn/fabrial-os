@@ -21,7 +21,7 @@ modules:
       # base image or unavailable on this Fedora version.
       skip-unavailable: true
       packages:
-        - https://github.com/joshuar/go-hass-agent/releases/download/v14.11.0/go-hass-agent-14.11.0-1.x86_64.rpm
+        - https://github.com/joshuar/go-hass-agent/releases/download/v14.12.0/go-hass-agent-14.12.0-1.x86_64.rpm
 
 
   # ── 3. FLATPAKS ────────────────────────────────────────────────────────────
