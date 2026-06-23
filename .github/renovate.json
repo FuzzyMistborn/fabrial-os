@@ -26,7 +26,7 @@
       "matchStrings": [
         "https://github\\.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_(?<currentValue>[\\d.]+)/veracrypt-[\\d.]+-Fedora-\\d+-x86_64\\.rpm"
       ],
-      "autoReplaceStringTemplate": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_{{{newValue}}}/veracrypt-{{{newValue}}}-Fedora-40-x86_64.rpm",
+      "autoReplaceStringTemplate": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_{{{newValue}}}/veracrypt-{{{newValue}}}-Fedora-44-x86_64.rpm",
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "veracrypt/VeraCrypt",
       "extractVersionTemplate": "^VeraCrypt_(?<version>.+)$",

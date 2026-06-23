@@ -42,7 +42,7 @@ install:
     - zoxide
     - hddtemp
     - ulauncher
-    - https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.29/veracrypt-1.26.29-Fedora-40-x86_64.rpm
+    - https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.29/veracrypt-1.26.29-Fedora-44-x86_64.rpm
 
     # ── Hardware / Input ──
     - logiops
