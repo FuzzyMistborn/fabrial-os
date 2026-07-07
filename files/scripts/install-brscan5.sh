@@ -4,7 +4,7 @@ set -oue pipefail
 getent group scanner > /dev/null 2>&1 || groupadd scanner
 
 # Install brscan5 bypassing signature checks (no digest header in Brother's RPM)
-curl -L -o /tmp/brscan5.rpm https://download.brother.com/welcome/dlf104036/brscan5-1.5.1-0.x86_64.rpm
+curl -L -o /tmp/brscan5.rpm https://download.brother.com/welcome/dlf104036/brscan5-1.7.0-0.x86_64.rpm
 rpm -i --nodigest --nosignature /tmp/brscan5.rpm
 rm /tmp/brscan5.rpm
 
