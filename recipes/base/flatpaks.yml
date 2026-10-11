@@ -13,7 +13,6 @@ configurations:
       - us.zoom.Zoom
       - org.signal.Signal
       - org.ferdium.Ferdium
-      - md.obsidian.Obsidian
       - com.jgraph.drawio.desktop
       - org.remmina.Remmina
       - org.openscad.OpenSCAD
