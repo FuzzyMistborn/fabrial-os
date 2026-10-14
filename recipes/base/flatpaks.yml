@@ -23,7 +23,6 @@ configurations:
       - org.kde.krename
       - org.filezillaproject.Filezilla
       - com.bitwarden.desktop
-      - com.system76.Popsicle
       - org.raspberrypi.rpi-imager
       - org.gnome.Calculator
       - com.mojang.Minecraft
