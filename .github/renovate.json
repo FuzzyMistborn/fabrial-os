@@ -22,6 +22,17 @@
     },
     {
       "customType": "regex",
+      "fileMatch": ["^files/scripts/install-opencloud-desktop\\.sh$"],
+      "matchStrings": [
+        "VERSION=\"(?<currentValue>[\\d.]+)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "opencloud-eu/desktop",
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
       "fileMatch": ["^recipes/.*\\.yml$"],
       "matchStrings": [
         "https://github\\.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_(?<currentValue>[\\d.]+)/veracrypt-[\\d.]+-Fedora-\\d+-x86_64\\.rpm"

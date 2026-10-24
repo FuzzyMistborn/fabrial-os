@@ -29,6 +29,7 @@ modules:
   - type: script
     scripts:
       - install-brscan5.sh
+      - install-opencloud-desktop.sh
 
   # ── 3. SYSTEMD SERVICES ────────────────────────────────────────────────────
   - type: systemd
