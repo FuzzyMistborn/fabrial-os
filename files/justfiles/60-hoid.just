@@ -29,7 +29,6 @@ setup-hoid:
     ujust thunderbird-profile-import
     ujust setup-wallpaper
     ujust setup-avatar
-    ujust setup-nextcloud
     ujust setup-autostart
     ujust toggle-user-motd
     ujust bw-lock
@@ -268,27 +267,6 @@ thunderbird-profile-import:
     rm -f /tmp/thunderbird-profile.tar.gz
     echo "Done: Thunderbird profile imported."
 
-# ── Nextcloud ────────────────────────────────────────────────────────────────
-
-[group('hoid')]
-setup-nextcloud:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    BW_SESSION=$(cat /tmp/.bw_session 2>/dev/null \
-        || { echo "ERROR: run ujust bw-unlock first"; exit 1; })
-    export BW_SESSION
-
-    ITEM=$(bw get item "uBlue Hoid")
-    NEXTCLOUD_URL=$(printf '%s' "${ITEM}" \
-        | jq -r '.fields[] | select(.name=="NEXTCLOUD_URL") | .value')
-    if [[ -z "${NEXTCLOUD_URL}" ]]; then
-        echo "ERROR: NEXTCLOUD_URL field not found in 'uBlue Hoid' vault item"
-        exit 1
-    fi
-    echo "Setting Nextcloud server URL: ${NEXTCLOUD_URL}"
-    nextcloud --overrideserverurl "${NEXTCLOUD_URL}"
-    echo "Done: Nextcloud server URL configured."
-
 # ── Autostart ────────────────────────────────────────────────────────────────
 
 [group('hoid')]
@@ -300,7 +278,7 @@ setup-autostart:
 
     cp /usr/share/fabrial-os/autostart/*.desktop "${AUTOSTART_DIR}/"
 
-    echo "Done: autostart entries created for Flameshot, Nextcloud, ULauncher."
+    echo "Done: autostart entries created for Flameshot, ULauncher."
 
 # ── logiops ──────────────────────────────────────────────────────────────────
 

@@ -22,7 +22,6 @@ install:
     # ── Productivity / Office ──
     - calibre
     - thunderbird
-    - nextcloud-client
 
     # ── Developer tools ──
     - code               # from VS Code repo above

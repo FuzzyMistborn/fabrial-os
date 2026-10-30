@@ -22,7 +22,6 @@ setup-kelsier:
     ujust konsave-import "uBlue Bazzite"
     ujust setup-wallpaper
     ujust setup-avatar
-    ujust setup-autostart
     ujust toggle-user-motd
     ujust bw-lock
     echo ""
@@ -30,15 +29,3 @@ setup-kelsier:
     echo "  1. ujust enable-wol  (desktop/wired only)"
     echo "  2. Log out and back in to activate zsh"
     echo ""
-
-# ── Autostart ────────────────────────────────────────────────────────────────
-
-[group('kelsier')]
-setup-autostart:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    AUTOSTART_DIR="${HOME}/.config/autostart"
-    mkdir -p "${AUTOSTART_DIR}"
-    printf '[Desktop Entry]\nName=Nextcloud\nExec=nextcloud --background\nIcon=Nextcloud\nType=Application\n' \
-        > "${AUTOSTART_DIR}/nextcloud.desktop"
-    echo "Done: autostart entries created for Nextcloud."
