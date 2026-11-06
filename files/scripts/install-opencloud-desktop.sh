@@ -25,7 +25,14 @@ install -d "${INSTALL_DIR}"
 cp -a squashfs-root/. "${INSTALL_DIR}/"
 chmod -R a+rX "${INSTALL_DIR}"
 
-ln -sf "${INSTALL_DIR}/AppRun" /usr/bin/opencloud-desktop
+# Use a wrapper rather than a symlink: AppRun derives its location from
+# dirname "$0" without resolving $0 itself, so a symlink in /usr/bin makes it
+# look for apprun-hooks/ in /usr/bin and fail to launch.
+cat > /usr/bin/opencloud-desktop <<EOF
+#!/bin/sh
+exec ${INSTALL_DIR}/AppRun "\$@"
+EOF
+chmod 755 /usr/bin/opencloud-desktop
 
 # Desktop entry and icons
 DESKTOP=$(find squashfs-root -maxdepth 1 -name "*.desktop" | head -1)
