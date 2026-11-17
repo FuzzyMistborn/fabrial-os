@@ -22,6 +22,17 @@
     },
     {
       "customType": "regex",
+      "fileMatch": ["^files/system/usr/lib/fabrial-os/install-snapmaker-orca\\.sh$"],
+      "matchStrings": [
+        "VERSION=\"(?<currentValue>[\\d.]+)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "Snapmaker/OrcaSlicer",
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
       "fileMatch": ["^files/scripts/install-opencloud-desktop\\.sh$"],
       "matchStrings": [
         "VERSION=\"(?<currentValue>[\\d.]+)\""
