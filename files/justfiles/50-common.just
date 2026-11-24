@@ -320,7 +320,7 @@ setup-wallpaper desktop="stormlight_arc1_wallpaper_uw.png" login="WayofKings.jpg
     plasma-apply-wallpaperimage "${DESKTOP_IMG}"
 
     echo "-- Applying plasma-login wallpaper --"
-    printf '[Greeter]\nWallpaperPlugin=org.kde.image\n\n[Greeter][Wallpaper][org.kde.image][General]\nImage=file://%s\n' "${LOGIN_IMG}" \
+    printf '[Greeter]\nWallpaperPluginId=org.kde.image\n\n[Greeter][Wallpaper][org.kde.image][General]\nImage=file://%s\n' "${LOGIN_IMG}" \
         | sudo tee /etc/plasmalogin.conf > /dev/null
 
     echo "Done: desktop → ${DESKTOP_IMG}, login → ${LOGIN_IMG}."
